@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+随着公司业务的发展，各权属子公司在推进产品研发及信息化建设过程中，积累众多核心文档类资产，包含产品设计、解决方案、宣传材料、项目管理、培训、公司制度及规范、视频类及其他重要文档资料。目前所有核心文档资产分散存储和管理，甚至部分核心文档资产存储在个人电脑中，不利于公司业务发展和共享共用需求。为加强文档核心资产管理，提高知识传承，提升工作效率，需要开发统一知识库管理系统，以满足集团公司文档资产管理需要。知识库管理系统的功能需求如下：
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+使用react以及其他ui库对整体进行实现
 
-## Available Scripts
+6.24日报
 
-In the project directory, you can run:
+* 完成基本环境的配置, 确定开发技术栈前端为react
+* 和项目老师对接, 明确项目的具体要求
 
-### `npm start`
+6.25日报
+* 构建前端框架
+* 将前端文件上传到github代码仓库中
+* 文件传输和显示的demo实现
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## 大致需求分析以及要做的难点
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* 文件上传
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 组织架构体系
+（1.1）支持多级组织架构体系，满足不同单位人员对知识管理需求。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+（1.2）支持对组织的增、 删、 改、 查、 导入功能。
 
-### `npm run eject`
+## 权限管理
+为确保知识资源的安全性和可控性，系统需提供灵活多样的权限控制。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+（2.1）跟组织架构结合，默认只能查询当前登录人的组织架构内的知识。
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+（2.2）指定公开范围。当前登录人可以对新增的知识设置公开范围（默认当前组织架构），可以设置上级或者整个公司内查看。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+（2.3）预览权限与下载权限隔离。为防止数据资源泄露，可以对一些安全级别较高的知识附件进行下载控制，其他使用人只有预览权限，不能进行下载处置。
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+（2.4）删除权限。默认只能删除本人上传的文件。
 
-## Learn More
+（2.5）权限申请。如需查看权限范围之外的文档资料，需要提交查看申请，审批通过后方可查看。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 知识管理功能
+（3.1）提供知识的新增、修改、删除、发布、附件、备份、打标功能。
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+（3.2）知识库管理支持多级目录管理用户可以按需制定合适的目录。
 
-### Code Splitting
+（3.3）同时提供对常用格式（PDF、WORD、EXCEL、PPT、图片、视频等）知识附件预览功能。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+（3.4）为提高知识共享和交流，同时提供对文档进行评价。
 
-### Analyzing the Bundle Size
+## 知识检索功能
+（4.1）支持知识内容进行全文检索、关键字检索、标签检索功能。方便用户更加灵活方便的找到所需的知识文档。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+（4.2）为更好的管理用户感兴趣的常用知识内容，设置收藏功能，同时为方便用户对收藏的内容进行查找，支持收藏夹自定义分类的功能。
 
-### Making a Progressive Web App
+（4.3）支持词库功能系统内置常用的词库并且可以提供双向维护功能将用户的搜索记录（不存在词库中词汇）保存下来，不断完善升级词库。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 个人工作台
+（5.1）更加方便高效的找到自己收藏的知识内容。
 
-### Advanced Configuration
+（5.2）记录自己的浏览历史。更加方便快速的找到自己浏览过的历史记录。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+（5.3）热门分值较高的知识推荐功能。
