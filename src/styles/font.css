@@ -1,0 +1,11 @@
+/* 一个关于字体的css */
+.thick-italic {
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  /*保证背景为白色*/
+.font-backcolor-white{
+    background-color: white;
+}
+
