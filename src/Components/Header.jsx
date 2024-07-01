@@ -2,8 +2,22 @@ import './ComCss.css'
 import '../styles/font.css'
 import Search from 'antd/es/input/Search';
 import { BellOutlined, FileDoneOutlined,UserOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import { Avatar, Table } from 'antd';
+import React, { useState } from 'react';
+import { Button, Modal } from 'antd';
+import EventTable from '../Tools/EventTable';
+
+
+
+
 function Header() {
+  //关于具体的消息表格内容
+  const [isModalOpen,setIsModalOpen]=useState(true)
+  const show1=()=>{
+      setIsModalOpen(true)
+      console.log(isModalOpen)
+  }
+
   //顶部搜索框
   const onSearch = (value) => console.log(value);
   return (
@@ -29,7 +43,7 @@ function Header() {
       <div className='headerSon'>
         {/*两个小标识*/}
         <div className=' div-center' style={{fontSize:40,margin:10}}> 
-            <FileDoneOutlined style={{marginRight:30}}/>
+            <FileDoneOutlined style={{marginRight:30}} onClick={()=>show1()}/>
             <BellOutlined style={{marginRight:30}}/>
         </div>
         {/*用户信息框*/}
@@ -38,6 +52,9 @@ function Header() {
             <div style={{margin:20}}>用户姓名</div>
         </div>
       </div>
+      
+      {/*关于内容的小卡片*/}
+      <EventTable isModalOpen={{open:isModalOpen, setOpen:()=>setIsModalOpen()}}></EventTable>
     </div>
   );
 }

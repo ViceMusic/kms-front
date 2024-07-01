@@ -1,7 +1,9 @@
 import './ComCss.css'
-import { Rate,Avatar} from 'antd';
+import { Rate,Avatar, Button} from 'antd';
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import React, { createElement, useState } from 'react';
+import { Input } from 'antd';
+const { TextArea } = Input;
 
  const comments=[
   {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
@@ -16,6 +18,9 @@ import React, { createElement, useState } from 'react';
 
 
 function Info() {
+  const [star, setStar]=useState(0)
+  //评论框的内容
+  const [value, setValue] = useState('');
   // 关于评论区的一些内容
   return (
     <div className='info radium'> 
@@ -81,7 +86,21 @@ function Info() {
       )}
     </div>
     {/*评论区*/}
-    <div></div>
+      <div style={{margin:10}}>
+        
+        <Rate style={{margin:10}} onChange={setStar} value={star}/>
+        <TextArea
+        style={{margin:10}}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="提交评论"
+            autoSize={{
+              minRows: 3,
+              maxRows: 5,
+            }}
+          />
+        <Button style={{margin:10}} type="primary">提交评论</Button>
+      </div>
     </div>
 
   );
