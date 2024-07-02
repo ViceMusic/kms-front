@@ -193,6 +193,11 @@ function Document() {
     setSelectedKeys(selectedKeysValue);
   };
 
+  //关于文件预览功能
+  const seeFile=()=>{
+      alert('说点啥')
+  }
+
   return (
     <div className='docu radium'>
       {/*上载和调整按钮*/}
@@ -205,12 +210,10 @@ function Document() {
               <Modal title="上传文件" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div style={{display:'flex', justifyContent:'center'}}>
                   <div style={{
-
                     width:600,
-  
                   }}>
                     {/*文件上传框*/}
-                     <div style={{height:120, margin:10}}>
+                     <div style={{height:120, margin:10, marginBottom:50}}>
                       <Dragger {...props} >
                         <p className="ant-upload-drag-icon">
                           <InboxOutlined />
@@ -298,10 +301,10 @@ function Document() {
         <Grid container spacing={2}>
           {
           files.map((item)=><Grid xs={2}>
-              <div className='file-blocks'>
+              {/*这里可以查询一些信息*/}
+              <div className='file-blocks' onClick={()=>seeFile()}>
                 <div  style={{backgroundColor:'grey', height:100, width:100}}></div>
                 {item.name}
-               
               </div>
           </Grid>)
         }

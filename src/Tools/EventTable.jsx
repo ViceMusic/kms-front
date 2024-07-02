@@ -4,9 +4,6 @@ import React, { createElement, useState } from 'react';
 import { Input,Table } from 'antd';
 const { TextArea } = Input;
 
-
-
-//关于表格信息的存储
 const columns = [
   {
     title: 'Name',
@@ -30,44 +27,40 @@ const columns = [
     render: () => <a>Delete</a>,
   },
 ];
-//表格的具体数据信息
-const data = [
+const datas = [
   {
     key: 1,
     name: 'John Brown',
     age: 32,
     address: 'New York No. 1 Lake Park',
-    description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+    description: <div>内部消息暂时不对外开放, 时间轴按照区域进行获取2</div>,
   },
   {
     key: 2,
     name: 'Jim Green',
     age: 42,
     address: 'London No. 1 Lake Park',
-    description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
+    description: <div>内部消息暂时不对外开放</div>,
   },
   {
     key: 3,
-    name: 'Not Expandable',
+    name: 'Star light',
     age: 29,
     address: 'Jiangsu No. 1 Lake Park',
-    description: 'This not expandable',
+    description: <div>内部消息暂时不对外开放</div>,
   },
   {
     key: 4,
     name: 'Joe Black',
     age: 32,
     address: 'Sydney No. 1 Lake Park',
-    description: 'My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.',
+    description: <div>内部消息暂时不对外开放</div>,
   },
 ];
 
+
+
 function EventTable(data) {
-  console.log(data.isModalOpen.open)
-
-  const [isModalOpen,setIsModalOpen]=useState(data.isModalOpen.open)
-
-  
   const handleOk = () => {
     data.isModalOpen.setOpen(false);
   };
@@ -76,9 +69,27 @@ function EventTable(data) {
     data.isModalOpen.setOpen(false)
   }
   return (
-    <Modal title="权限申请/审批" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel}>
-    输出点别的
-  </Modal>
+    <Modal title="权限申请/审批" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} style={{width:200}}>
+     <Table
+        columns={columns}
+        expandable={{
+          expandedRowRender: (record) => {
+            console.log(data)
+              return (
+                <p
+                  style={{
+                    margin: 0,
+                  }}
+                >
+                  {record.description}
+                </p>
+              )
+          },
+          rowExpandable: (record) => record.name !== 'Not Expandable',
+        }}
+        dataSource={datas}
+      />
+    </Modal>
   )
 ;
 }

@@ -6,15 +6,23 @@ import { Avatar, Table } from 'antd';
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import EventTable from '../Tools/EventTable';
+import Message from '../Tools/Message';
 
 
 
 
 function Header() {
   //关于具体的消息表格内容
-  const [isModalOpen,setIsModalOpen]=useState(true)
+  const [isModalOpen,setIsModalOpen]=useState(false)
   const show1=()=>{
       setIsModalOpen(true)
+      console.log(isModalOpen)
+  }
+
+  //关于消息框的内嵘
+  const [isModalOpen2,setIsModalOpen2]=useState(false)
+  const show2=()=>{
+      setIsModalOpen2(true)
       console.log(isModalOpen)
   }
 
@@ -44,7 +52,7 @@ function Header() {
         {/*两个小标识*/}
         <div className=' div-center' style={{fontSize:40,margin:10}}> 
             <FileDoneOutlined style={{marginRight:30}} onClick={()=>show1()}/>
-            <BellOutlined style={{marginRight:30}}/>
+            <BellOutlined style={{marginRight:30}} onClick={()=>show2()}/>
         </div>
         {/*用户信息框*/}
         <div className=' div-center'> 
@@ -55,6 +63,7 @@ function Header() {
       
       {/*关于内容的小卡片*/}
       <EventTable isModalOpen={{open:isModalOpen, setOpen:()=>setIsModalOpen()}}></EventTable>
+      <Message isModalOpen={{open:isModalOpen2, setOpen:()=>setIsModalOpen2()}}></Message>
     </div>
   );
 }
