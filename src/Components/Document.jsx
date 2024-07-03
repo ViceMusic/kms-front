@@ -4,10 +4,11 @@ import { Breadcrumb ,Cascader,DatePicker, Input} from 'antd';
 import Search from 'antd/es/input/Search';
 import { CloudUploadOutlined  } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
-import { Button, Modal, Divider, Flex, Tree,Tag } from 'antd';
+import { Button, Modal, Divider, Flex, Tree,Tag,Popover } from 'antd';
 import { useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
+import FileView from '../Tools/fileView';
 const { Dragger } = Upload;
 
 
@@ -157,6 +158,13 @@ const props = {
 };
 
 function Document() {
+  //关于选中了哪个文件
+  const [fileurl, setfileurl]=useState('')
+  //关于文件预览弹窗的方式
+  const [isModalOpen1,setIsModalOpen1]=useState(false)
+  const show1=()=>{
+      setIsModalOpen1(true)
+  }
   //关于新增文件的弹窗
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -193,7 +201,7 @@ function Document() {
     setSelectedKeys(selectedKeysValue);
   };
 
-  //关于文件预览功能
+  //关于文件预览功能, 以及文件的下载功能(首先先得出现一个气泡哇)
   const seeFile=()=>{
       alert('说点啥')
   }
@@ -299,19 +307,31 @@ function Document() {
       {/*文件的块状转化模式*/}
       <div style={{height:'80%',overflowY:'auto',overflowX:'hidden'}}>
         <Grid container spacing={2}>
-          {
-          files.map((item)=><Grid xs={2}>
-              {/*这里可以查询一些信息*/}
-              <div className='file-blocks' onClick={()=>seeFile()}>
-                <div  style={{backgroundColor:'grey', height:100, width:100}}></div>
-                {item.name}
-              </div>
-          </Grid>)
-        }
+          {files.map((item)=>
+            <Grid xs={2}>
+                {/*每一个图片都有对应的模块*/}
+                {/* 右键点击实现预览, 左键点击实现基本信息展示*/}
+                  <div className='file-blocks' onClick={()=>{
+                      alert('鼠标左键点击, 原计划右边栏展出基本数据')
+                  }}
+                  onContextMenu={(event)=>{
+                    //首先阻止浏览器自己的页面
+                    event.preventDefault(); // 阻止浏览器默认的右键菜单
+                    setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
+                    show1()
+                    
+                    
+                  }}
+                >
+                <div style={{backgroundColor:'grey', height:100, width:100}}></div>
+                  {item.name}
+                </div>
+            </Grid>)}
         </Grid>
-
-
+        {/*这个fileurl是点击传入目前正在点击的文件是什么*/}
+        <FileView fileurl={fileurl} isModalOpen={{open:isModalOpen1, setOpen:()=>setIsModalOpen1()}} />
       </div>
+
 
     </div>
   );
