@@ -201,11 +201,6 @@ function Document() {
     setSelectedKeys(selectedKeysValue);
   };
 
-  //关于文件预览功能, 以及文件的下载功能(首先先得出现一个气泡哇)
-  const seeFile=()=>{
-      alert('说点啥')
-  }
-
   return (
     <div className='docu radium'>
       {/*上载和调整按钮*/}
@@ -319,12 +314,21 @@ function Document() {
                     event.preventDefault(); // 阻止浏览器默认的右键菜单
                     setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
                     show1()
+                    //将文件的修整和信息放在信息栏和别的啥
                     
                     
                   }}
                 >
-                <div style={{backgroundColor:'grey', height:100, width:100}}></div>
-                  {item.name}
+                  <Popover content={
+                    <div>
+                      <p>一些内容啦 ,没什么其他关闭的</p>
+                      <p>Content</p>
+                    </div>
+                  } >
+                    <div style={{backgroundColor:'grey', height:100, width:100}}></div>
+                    <div style={{ textAlign:'center'}}>{item.name}</div>
+
+                  </Popover>
                 </div>
             </Grid>)}
         </Grid>
