@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import './ComCss.css'
 import { Breadcrumb ,Cascader,DatePicker, Input} from 'antd';
 import Search from 'antd/es/input/Search';
-import { CloudUploadOutlined  } from '@ant-design/icons';
+import { CloudUploadOutlined,FolderOutlined,FileOutlined,FileJpgOutlined    } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
 import { Button, Modal, Divider, Flex, Tree,Tag,Popover } from 'antd';
 import { useState } from 'react';
@@ -180,6 +180,12 @@ function Document() {
   const onChange = (value) => {
     console.log(value);
   };
+  //浏览开关
+  const [switchOpen, setSwitchOpen]=useState(true)
+
+  const onChangeSwitch = (value) => {
+    setSwitchOpen(!switchOpen)
+  };
   //关于数形控件
   const [expandedKeys, setExpandedKeys] = useState(['0-0-0', '0-0-1']);
   const [checkedKeys, setCheckedKeys] = useState(['0-0-0']);
@@ -267,7 +273,7 @@ function Document() {
                   </div>
                 </div>
               </Modal>
-              <Switch style={{margin:20}} checkedChildren="图标" unCheckedChildren="条目" defaultChecked />
+              <Switch style={{margin:20}} checkedChildren="图标" unCheckedChildren="条目" defaultChecked onChange={onChangeSwitch} />
         </div>
       </div>
 
@@ -303,7 +309,9 @@ function Document() {
       <div style={{height:'80%',overflowY:'auto',overflowX:'hidden'}}>
         <Grid container spacing={2}>
           {files.map((item)=>
-            <Grid xs={2}>
+            (
+              switchOpen?
+              <Grid xs={2}>
                 {/*每一个图片都有对应的模块*/}
                 {/* 右键点击实现预览, 左键点击实现基本信息展示*/}
                   <div className='file-blocks' onClick={()=>{
@@ -325,12 +333,23 @@ function Document() {
                       <p>Content</p>
                     </div>
                   } >
-                    <div style={{backgroundColor:'grey', height:100, width:100}}></div>
+                    <div style={{ height:100, width:100}}>
+                      {    item.type==1 && <FolderOutlined  style={{fontSize:100}}/> }
+                      {    item.type==2 && <FileOutlined   style={{fontSize:100}}/> }
+                      {    item.type==3 && <FileJpgOutlined   style={{fontSize:100}}/> }
+                      </div>
                     <div style={{ textAlign:'center'}}>{item.name}</div>
 
                   </Popover>
                 </div>
-            </Grid>)}
+            </Grid>
+              :
+              <Grid xs={12} style={{margin:10, backgroundColor:'white',padding:10, borderRadius:10}}> 
+                      {    item.type==1 && <FolderOutlined  style={{marginRight:10}}/> }
+                      {    item.type==2 && <FileOutlined   style={{marginRight:10}} /> }
+                      {    item.type==3 && <FileJpgOutlined    style={{marginRight:10}}/> }
+              后端还没对接上, 先长成这样</Grid>
+            ))}
         </Grid>
         {/*这个fileurl是点击传入目前正在点击的文件是什么*/}
         <FileView fileurl={fileurl} isModalOpen={{open:isModalOpen1, setOpen:()=>setIsModalOpen1()}} />
