@@ -1,17 +1,29 @@
 import './ComCss.css'
 import '../styles/font.css'
+import '../App.css'
 import Search from 'antd/es/input/Search';
 import { BellOutlined, FileDoneOutlined,UserOutlined } from '@ant-design/icons';
-import { Avatar, Table } from 'antd';
+import { Avatar, Popover, Table } from 'antd';
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import EventTable from '../Tools/EventTable';
 import Message from '../Tools/Message';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 function Header() {
+  //浮动窗口
+
+  const navi=useNavigate()
+  //注销用户
+  const logout=()=>{
+    localStorage.clear('username')
+    localStorage.clear('password')
+    navi('/login')
+
+  }
   //关于具体的消息表格内容
   const [isModalOpen,setIsModalOpen]=useState(false)
   const show1=()=>{
@@ -55,9 +67,15 @@ function Header() {
             <BellOutlined style={{marginRight:30}} onClick={()=>show2()}/>
         </div>
         {/*用户信息框*/}
-        <div className=' div-center'> 
-            <Avatar size={34} icon={<UserOutlined />} />
-            <div style={{margin:20}}>用户姓名</div>
+        <div className=' div-center' > 
+          {/*用户头像*/}
+            <Avatar size={34} icon={<UserOutlined />}  />
+            
+            {/*用户姓名*/}
+            <Popover placement="bottom" title={'用户信息'} content={<Button onClick={()=>logout()}> logout</Button>}>
+             <div style={{margin:20}}>{localStorage.getItem('username')}</div>
+            </Popover>
+            
         </div>
       </div>
       

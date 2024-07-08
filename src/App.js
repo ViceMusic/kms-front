@@ -9,14 +9,15 @@ import User from './Pages/User';
 import { AuthProvider } from './AuthProvider';
 import { AuthContext } from './AuthProvider'
 import { BrowserRouter, Routes,Route } from 'react-router-dom';
+import Protector from './Protector';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home/>} />
           <Route path='/login' element={<User/>} />
+          <Route path='/' element={<Protector Component={()=><Home/>}/>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

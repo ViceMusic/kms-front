@@ -334,9 +334,9 @@ function Document() {
                     </div>
                   } >
                     <div style={{ height:100, width:100}}>
-                      {    item.type==1 && <FolderOutlined  style={{fontSize:100}}/> }
+                      {    item.type==1 && <FolderOutlined  style={{fontSize:100, color:'orange'}}/> }
                       {    item.type==2 && <FileOutlined   style={{fontSize:100}}/> }
-                      {    item.type==3 && <FileJpgOutlined   style={{fontSize:100}}/> }
+                      {    item.type==3 && <FileJpgOutlined   style={{fontSize:100,color:'red'}}/> }
                       </div>
                     <div style={{ textAlign:'center'}}>{item.name}</div>
 

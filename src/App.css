@@ -36,3 +36,39 @@
     transform: rotate(360deg);
   }
 }
+.dropdown-container {  
+  position: relative;  
+  display: inline-block;  
+}  
+  
+.dropdown-trigger {  
+  /* 设置触发器的样式 */   
+  cursor: pointer;  
+}
+.dropdown-menu {  
+  /* 设置下拉菜单的样式 */  
+  position: absolute;  
+  top: 100%; /* 使其位于触发器下方 */  
+  left: 0;  
+  padding: 10px;  
+  background-color: #f9f9f9;  
+  border: 1px solid #ccc;  
+  display: flex;  
+  flex-direction: column;  
+  align-items: center;  
+  width: 200px;
+  /* 可以添加动画效果等 */  
+}  
+  
+.dropdown-item {  
+  /* 设置下拉菜单项的样式 */  
+  padding: 5px 10px;  
+  margin-bottom: 5px;  
+  cursor: pointer;  
+  background-color: orange;
+  border-radius: 10px;
+  border: none;
+  width: 160px;
+  color: white;
+  font-weight: 700;
+}
