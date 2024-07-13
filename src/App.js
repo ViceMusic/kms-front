@@ -10,6 +10,7 @@ import { AuthProvider } from './AuthProvider';
 import { AuthContext } from './AuthProvider'
 import { BrowserRouter, Routes,Route } from 'react-router-dom';
 import Protector from './Protector';
+import Sign from './Pages/Sign';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/login' element={<User/>} />
+          <Route path='/Sign' element={<Sign/>} />
           <Route path='/' element={<Protector Component={()=><Home/>}/>} />
         </Routes>
       </BrowserRouter>
