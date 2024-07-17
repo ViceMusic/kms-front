@@ -23,6 +23,9 @@ function Sign() {
         // 将登录信息存储在storage
         localStorage.setItem('username', name)
         localStorage.setItem('password', pwd)
+        //组织需要重新弄
+        localStorage.setItem('userId', '2')
+        localStorage.setItem('orgId',  '2')
         //然后跳转到登录页面
         navi('/')
       })

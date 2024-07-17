@@ -1,7 +1,7 @@
 import './ComCss.css'
 import '../styles/space.css'
-import { AppstoreOutlined, FolderOutlined , SettingOutlined, FolderOpenOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
+import { AppstoreOutlined, FolderOutlined , SettingOutlined, FolderOpenOutlined, PlusCircleOutlined,DatabaseOutlined } from '@ant-design/icons';
+import { FloatButton, Menu,Modal,Input } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -21,12 +21,13 @@ function cleanEmptyChildren(node) {
 
 //将后端返回的数组进行配置的方法
 function buildTree(data) {  
+  data = data.filter(item => item.orgId !== 0);
   // 创建一个映射，方便根据parentId查找父节点  
   const map = {};  
   data.forEach(item => {  
       // 创建树节点对象，并设置key和label  
       const treeNode = {  
-          key: item.folderId,  
+          key: item.orgId,  //还是要想办法获取到id
           label: item.name,  
           children: []  
       };  
@@ -59,73 +60,120 @@ function buildTree(data) {
   return tree;  
 }  
 
-// 一个预制的数组, 就是新增的一些东西
-const items = [
-    {
-      key: 'sub2',
-      label: 'Navigation Two',
-      children: [
-        {
-          key: '5',
-          label: 'Option 5',
-        },
-        {
-          key: '6',
-          label: 'Option 6',
-        },
-        {
-          key: 'sub3',
-          label: 'Submenu',
-          children: [
-            {
-              key: '7',
-              label: 'Option 7',
-            },
-            {
-              key: '8',
-              label: 'Option 8',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'sub4',
-      label: 'Navigation Three',
-      icon: <FolderOpenOutlined />,
-      children: [
-        {
-          key: '9',
-          label: 'Option 9',
-        },
-        {
-          key: '10',
-          label: 'Option 10',
-        },
-        {
-          key: '11',
-          label: 'Option 11',
-        },
-        {
-          key: '12',
-          label: 'Option 12',
-        },
-      ],
-    },
-  ];
 
 
 
-function Navigation() {
+function Navigation(props) {
     const [openFolder,setOpenFolder]=useState('1')
     const [org,setOrg]=useState([])
+    //获取该组织下面所有的文件
+    const getAllFilesByOrgIdAndParentId=(orgId, parentId)=>{
+      axios.get('http://localhost:8080/knowledge/getByFolderIdAndOrgId', {
+        params: {orgId:orgId, folderId:parentId}
+      })
+      .then(response => {
+        // 处理请求成功的响应======================================================================
+        console.log(response.data.data)
+        props.setFiles(response.data.data)
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
+    }
+    //获取该组织下面的所有文件夹
+    const getAllFolderByOrgIdAndParentId=(orgId, parentId)=>{
+      axios.get('http://localhost:8080/folder/getByParentIdAndOrgId', {
+        params: {orgId:orgId, parentId:parentId}
+      })
+      .then(response => {
+        // 处理请求成功的响应======================================================================
+        console.log(response.data.data)
+        props.setFolders(response.data.data)
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
+    }
+    //获取组织的基本信息
+    const getMessageOfOrg=(id)=>{
+      axios.get('http://localhost:8080/org/getOrgById', {
+        params: {orgId:id}
+      })
+      .then(response => {
+        // 处理请求成功的响应
+        props.setOrgMessage(response.data.data)
+        
+        
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
+    }
     //导航栏的点击事件
+    const onOpenchange=(e)=>{
+        //这里得到的是一个返回的数组
+        //数组的最后一个即为最后一个打开的组织的orgid
+        //展示组织数据
+        props.setInfoShow('1') 
+        // 这里的key就是id,这里一会需要根据key获取组织的基本信息
+        if(e.length>=1){
+          props.setMsg(e[e.length-1])   //  虽然叫做msg但其实是id
+          getMessageOfOrg(e[e.length-1])// 这个后面应该是还需要进一步改进
+          const p=props.parentIds
+          getAllFolderByOrgIdAndParentId(e[e.length-1],p[p.length-1]) //获取所有的文件夹信息
+          props.setOrgId(e[e.length-1])
+          getAllFilesByOrgIdAndParentId(e[e.length-1],p[p.length-1])
+        }
+    }
     const onClick = (e) => {
-        console.log('click List', e);
+        //展示组织数据
+        props.setInfoShow('1') 
+        // 这里的key就是id,这里一会需要根据key获取组织的基本信息
+        props.setMsg(e.key)
+        //获取id
+        getMessageOfOrg(e.key)
+        //获取所有的文件夹
+        const p=props.parentIds
+        getAllFolderByOrgIdAndParentId(e.key,p[p.length-1])
+        getAllFilesByOrgIdAndParentId(e.key,p[p.length-1])//获取所有的文件
+        props.setOrgId(e.key)
+
     };
+    //关于在根目录新增文件的弹窗
+    const [newOrg, setNewOrg]= useState('')
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+  
+    const handleOk = () => {
+      //新增组织(只能在根目录上新增)
+      axios.get('http://localhost:8080/org/insert', {
+        params: {
+          name:newOrg,
+          parentId:'0'
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+        // 处理请求成功的响应
+        alert('新增组织成功, 请刷新页面展示')
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
+      setIsModalOpen(false);
+    };
+  
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
+
     useEffect(()=>{
       //获取列表并且修整
       axios.get('http://localhost:8080/org/getAll', {
@@ -133,7 +181,7 @@ function Navigation() {
       })
       .then(response => {
         // 处理请求成功的响应
-        const folders=response.data.data
+        const folders = response.data.data
         const tree = buildTree(folders);  
         setOrg(tree)
       })
@@ -146,16 +194,31 @@ function Navigation() {
     //返回组件
     return (
         <div className='Navi radium overflower'>
+          {/*新增按钮*/}
+          <div style={{margin:20, 
+            display:'flex',
+            justifyContent:'space-between'
+          }}>
+            <DatabaseOutlined style={{fontSize:30}} onClick={()=>{props.setInfoShow('0')}}/>
+            <PlusCircleOutlined style={{fontSize:30}} onClick={showModal}/>
+            
+          </div>
+          {/*滚动菜单*/}
             <Menu
                     onClick={onClick}
+                    onOpenChange={onOpenchange}
                     style={{
                         width: '100%',
                     }}
-                    defaultSelectedKeys={['5']}
-                    defaultOpenKeys={['sub2']}
                     mode="inline"
                     items={org}
                 />
+            <Modal title="在根目录新增文件" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+              <Input onChange={(e)=>{
+                setNewOrg(e.target.value)
+              }}/>
+            </Modal>
+          
         </div>
     );
 }

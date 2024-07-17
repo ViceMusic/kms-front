@@ -72,7 +72,18 @@ function Header() {
             <Avatar size={34} icon={<UserOutlined />}  />
             
             {/*用户姓名*/}
-            <Popover placement="bottom" title={'用户信息'} content={<Button onClick={()=>logout()}> logout</Button>}>
+            <Popover placement="bottom"  content={
+              <div style={{
+                
+                width:'200px',
+                alignContent:'space-between'
+              }}>
+                <Button style={{width:'100%', marginBottom:10}} onClick={()=>{navi('/')}}> 返回主页</Button><br/>
+                <Button style={{width:'100%', marginBottom:10}} onClick={()=>{navi('/')}}> 个人工作台(暂未开发)</Button><br/>
+                <Button style={{width:'100%'}} onClick={()=>logout()}> logout</Button>
+              </div>
+              }
+              >
              <div style={{margin:20}}>{localStorage.getItem('username')}</div>
             </Popover>
             

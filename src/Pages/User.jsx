@@ -21,6 +21,8 @@ function User() {
         // 将登录信息存储在storage
         localStorage.setItem('username', name)
         localStorage.setItem('password', pwd)
+        localStorage.setItem('userId', response.data.data.userId)
+        localStorage.setItem('orgId',  response.data.data.orgId)
         //然后跳转到登录页面
         navi('/')
       })
