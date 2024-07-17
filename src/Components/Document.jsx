@@ -277,7 +277,7 @@ function Document(props) {
       // 处理请求错误
       console.error(error);
     });
-    
+
     //获取更新全部的文件
     axios.get('http://localhost:8080/knowledge/getByFolderIdAndOrgId', {
       params: {
@@ -449,8 +449,23 @@ function Document(props) {
       // 处理请求错误
       console.error(error);
     });
+  }
 
-
+  //根据文件序号获取该文件评论的方法
+  const getCommentsByKnowId=(item)=>{
+    axios.get('http://localhost:8080/evaluate/getByKnowId', {
+      params: {
+        knowId:item.knowId
+      }
+    })
+    .then(response => {
+      console.log(response.data)
+      props.setComments(response.data.data?response.data.data:[])
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
   }
 
 
@@ -564,7 +579,7 @@ function Document(props) {
         {/*一些关于文件夹和乱七八糟的东西(具体的文件内容)*/}
       </div>
 
-      {/*文件的两种展示模式*/}
+      {/*文件夹的两种展示模式*/}
       <div style={{height:'80%',overflowY:'auto',overflowX:'hidden'}}>
         <Grid container spacing={2}>
           {props.folders.map((item)=>
@@ -572,16 +587,10 @@ function Document(props) {
                 switchOpen?
                 <Grid item xs={2}>
                   <div className='file-blocks' onClick={()=>{
-                    props.setInfoShow('1')//展示文件信息
-                    props.setMsg(item.name) //设置文件名字
+                    props.setInfoShow('3')//展示文件夹信息
+                    props.setMsg(item.name) //设置文件夹名字
+                    props.setFolderMessage(item)
                     accessFolder(item)
-                }}
-                onContextMenu={(event)=>{ //一个右键展示预览文件的方法, 后面可能回换成别的东西
-                  //首先阻止浏览器自己的页面
-                  event.preventDefault(); // 阻止浏览器默认的右键菜单
-                  setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
-                  show1()
-                  //将文件的修整和信息放在信息栏和别的啥
                 }}
               >
                 <Popover content={
@@ -609,8 +618,9 @@ function Document(props) {
             :
           <Grid  item xs={12}
             onClick={()=>{
-              props.setInfoShow('1')
+              props.setInfoShow('3')
               props.setMsg(item.name)
+              props.setFolderMessage(item)
               accessFolder(item)
           }}
           onContextMenu={(event)=>{
@@ -646,6 +656,7 @@ function Document(props) {
                   <div className='file-blocks' onClick={()=>{
                     props.setInfoShow('2')//展示文件信息
                     props.setFileMessage(item)
+                    getCommentsByKnowId(item)
                 }}
                 onContextMenu={(event)=>{ //一个右键展示预览文件的方法, 后面可能回换成别的东西
                   //首先阻止浏览器自己的页面
@@ -681,6 +692,7 @@ function Document(props) {
             onClick={()=>{
               props.setInfoShow('2')
               props.setFileMessage(item)
+              getCommentsByKnowId(item)
           }}
           onContextMenu={(event)=>{
             event.preventDefault(); // 阻止浏览器默认的右键菜单

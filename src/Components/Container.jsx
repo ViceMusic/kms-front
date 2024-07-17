@@ -9,9 +9,11 @@ function Container() {
   const [orgId, setOrgId]=useState('') //组织的基本情况
   const [orgMessage, setOrgMessage]=useState({}) //组织的基本情况
   const [fileMessage,setFileMessage]=useState({}) //文件的基本信息
+  const [folderMessage,setFolderMessage]=useState({}) //文件夹的基本信息
   const [parentIds, setParentIds]=useState(['0'])
   const [files,setFiles]=useState([])
   const [folders,setFolders]=useState([])
+  const [comments, setComments]=useState([])
   return (
     <div className='container'>
       <Navigation 
@@ -34,6 +36,8 @@ function Container() {
         setParentIds={setParentIds}
         setFolders={setFolders}
         setFiles={setFiles}
+        setFolderMessage={setFolderMessage}
+        setComments={setComments}
         parentIds={parentIds}
         folders={folders}
         infoShow={infoShow} 
@@ -42,12 +46,15 @@ function Container() {
         fileMessage={fileMessage}
         orgId={orgId}
         files={files}
+        folderMessage={folderMessage}
       />
       <Info 
         infoShow={infoShow} 
         msg={msg} 
         orgMessage={orgMessage} 
         fileMessage={fileMessage}
+        folderMessage={folderMessage}
+        comments={comments}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import './ComCss.css'
 import { Rate,Avatar, Button, Tag, Modal} from 'antd';
-import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
+import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined ,DeleteOutlined} from '@ant-design/icons';
 import React, { createElement, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import axios from 'axios';
@@ -105,6 +105,45 @@ function Info(props) {
   const handleCancelAdd = () => {
     setIsShowAdd(false);
   };
+
+  //提交评论
+  const submitComment=()=>{
+    axios.get('http://localhost:8080/evaluate/insert', {
+      params: {
+        knowId:props.fileMessage.knowId,
+        userId:localStorage.getItem('userId'),
+        star:star,
+        text:value
+      }
+    })
+    .then(response => {
+      console.log(response.data) //设定为每个用户只能评论一条
+      alert('评论成功')
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+  }
+
+  //删除自己的评论
+  const deleteComment=(item)=>{
+    axios.get('http://localhost:8080/evaluate/delete', {
+      params: {
+        knowId:item.knowId,
+        userId:item.userId,
+      }
+    })
+    .then(response => {
+      console.log(response.data) //设定为每个用户只能评论一条
+      alert('评论成功删除')
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+
+  }
   return (
     <div className='info radium'> 
     {/* 暂时没有展示信息的对应格式*/}
@@ -192,23 +231,25 @@ function Info(props) {
       overflowY:'auto',
 
     }}>
-      {comments.map(item => 
+      {props.comments.map(item => 
         <div style={{backgroundColor:'white', 
-        padding:10,
-        border:'none',
-        borderRadius:8,
-        fontSize:15,
-        marginBottom:15
-
+          padding:10,
+          border:'none',
+          borderRadius:8,
+          fontSize:15,
+          marginBottom:15
         }}>
-          评论信息
+          用户:{item.userId} 
+          {item.userId==localStorage.getItem('userId') && <DeleteOutlined onClick={()=>deleteComment(item)}/>}<br></br>
+          <Rate disabled defaultValue={item.star} style={{fontSize:15}}></Rate><br></br>
+          <div style={{margin:10}}>{item.text}</div>
         </div>
       )}
     </div>
     {/*评论区*/}
       <div style={{margin:10}}>
         
-        <Rate style={{margin:10}} onChange={setStar} value={star}/>
+        <Rate style={{margin:10}} onChange={setStar} value={star} />
         <TextArea
         style={{margin:10}}
             value={value}
@@ -219,11 +260,30 @@ function Info(props) {
               maxRows: 5,
             }}
           />
-        <Button style={{margin:10}} type="primary">提交评论</Button>
+        <Button style={{margin:10}} type="primary" onClick={submitComment}>提交评论</Button>
       </div>    
     </>
-    
-    
+    }
+    {/*文件夹为3*/}
+    {props.infoShow=='3' && 
+      <>
+        <h3>{props.folderMessage.name}</h3><br/>
+        {/*此处还可以添加一大堆属性*/}
+        <Tag color="orange">tag1</Tag>
+        <Tag color="red">tag</Tag>
+        <Tag color="blue">tag</Tag>
+        <br/><br/>
+          <table >
+          <tr>
+            <td>所属部门</td>
+            <td>35</td>
+          </tr>
+          <tr>
+            <td>Jane Smith</td>
+            <td>28</td>
+          </tr>
+        </table> 
+      </>
     }
     
     </div>
