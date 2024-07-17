@@ -66,14 +66,14 @@ function buildTree(data) {
 function Navigation(props) {
     const [openFolder,setOpenFolder]=useState('1')
     const [org,setOrg]=useState([])
-    //获取该组织下面所有的文件
+    //获取该组织,该文件夹下面所有的文件
     const getAllFilesByOrgIdAndParentId=(orgId, parentId)=>{
+      console.log('进入文件夹',parentId)
       axios.get('http://localhost:8080/knowledge/getByFolderIdAndOrgId', {
         params: {orgId:orgId, folderId:parentId}
       })
       .then(response => {
         // 处理请求成功的响应======================================================================
-        console.log(response.data.data)
         props.setFiles(response.data.data)
       })
       .catch(error => {
@@ -88,7 +88,7 @@ function Navigation(props) {
       })
       .then(response => {
         // 处理请求成功的响应======================================================================
-        console.log(response.data.data)
+        console.log('获取文件夹',response.data.data)
         props.setFolders(response.data.data)
       })
       .catch(error => {
@@ -125,7 +125,8 @@ function Navigation(props) {
           const p=props.parentIds
           getAllFolderByOrgIdAndParentId(e[e.length-1],p[p.length-1]) //获取所有的文件夹信息
           props.setOrgId(e[e.length-1])
-          getAllFilesByOrgIdAndParentId(e[e.length-1],p[p.length-1])
+          getAllFilesByOrgIdAndParentId(e[e.length-1],p[p.length-1]) //获取所有的文件信息
+          console.log(e[e.length-1],p[p.length-1])
         }
     }
     const onClick = (e) => {
@@ -137,8 +138,9 @@ function Navigation(props) {
         getMessageOfOrg(e.key)
         //获取所有的文件夹
         const p=props.parentIds
-        getAllFolderByOrgIdAndParentId(e.key,p[p.length-1])
+        getAllFolderByOrgIdAndParentId(e.key,p[p.length-1]) //获取所有文件夹
         getAllFilesByOrgIdAndParentId(e.key,p[p.length-1])//获取所有的文件
+        console.log('获取文件',e.key,p[p.length-1])
         props.setOrgId(e.key)
 
     };
@@ -213,7 +215,7 @@ function Navigation(props) {
                     mode="inline"
                     items={org}
                 />
-            <Modal title="在根目录新增文件" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="在根目录新增组织" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
               <Input onChange={(e)=>{
                 setNewOrg(e.target.value)
               }}/>

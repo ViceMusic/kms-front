@@ -255,14 +255,14 @@ function Document(props) {
     setFolderId(item.folderId)
     //先修改parents
     props.setParentIds([...props.parentIds, item.folderId+''])
+    console.log('进入文件夹', item.folderId)
     //然后设置进入的文件夹
     setInFolder(true)
     console.log({
       orgId:props.orgId,
       parentId:item.folderId+''
     })
-    //然后发送对应的请求
-    //请求没发送????
+    //获取更新全部的文件夹
     axios.get('http://localhost:8080/folder/getByParentIdAndOrgId', {
       params: {
         orgId:props.orgId,
@@ -272,6 +272,22 @@ function Document(props) {
     .then(response => {
       console.log(response.data)
       props.setFolders(response.data.data)
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+    
+    //获取更新全部的文件
+    axios.get('http://localhost:8080/knowledge/getByFolderIdAndOrgId', {
+      params: {
+        orgId:props.orgId,
+        folderId:item.folderId+''
+      }
+    })
+    .then(response => {
+      console.log('获取文件为',response.data)
+      props.setFiles(response.data.data)
     })
     .catch(error => {
       // 处理请求错误
@@ -556,7 +572,7 @@ function Document(props) {
                 switchOpen?
                 <Grid item xs={2}>
                   <div className='file-blocks' onClick={()=>{
-                    props.setInfoShow('2')//展示文件信息
+                    props.setInfoShow('1')//展示文件信息
                     props.setMsg(item.name) //设置文件名字
                     accessFolder(item)
                 }}
@@ -593,7 +609,7 @@ function Document(props) {
             :
           <Grid  item xs={12}
             onClick={()=>{
-              props.setInfoShow('2')
+              props.setInfoShow('1')
               props.setMsg(item.name)
               accessFolder(item)
           }}
@@ -612,12 +628,16 @@ function Document(props) {
                               showModalChangeFolder(e)
                               setFolderId(item.folderId)
                             }}><EditOutlined />重命名文件夹</Button><br/>
-                          <Button style={{marginBottom:10,border:'none' }}><DeleteOutlined />删除文件夹</Button>
+                          <Button style={{marginBottom:10,border:'none' }}onClick={(e)=>{
+                              deleteFolder(e,item)
+                            }}><DeleteOutlined />删除文件夹</Button>
                         </div>
                       } >  {item.name}
                 </Popover>
             </Grid>
             ))}
+
+
             {/* 关于文件的具体部分*/}
             {props.files.map((item)=>
             (

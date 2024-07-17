@@ -33,6 +33,7 @@ function Container() {
         setFileMessage={setFileMessage} 
         setParentIds={setParentIds}
         setFolders={setFolders}
+        setFiles={setFiles}
         parentIds={parentIds}
         folders={folders}
         infoShow={infoShow} 
