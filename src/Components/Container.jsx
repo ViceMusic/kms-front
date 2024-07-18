@@ -17,6 +17,9 @@ function Container(props) {
   const [folders,setFolders]=useState([])
   const [comments, setComments]=useState([])
   const {inSearch, setInSearch, searchs,SetSearchs }=useContext(AuthContext)
+  const [averageStar, setAverageStar]=useState(0)
+  const [inFolder, setInFolder]=useState(false)//是否在文件夹中(用来展示回退按键的)
+  
   
   return (
     <div className='container'>
@@ -29,9 +32,10 @@ function Container(props) {
         setFolders={setFolders}
         setOrgId={setOrgId}
         setFiles={setFiles}
-        setInSearch={props.setInSearch}
         parentIds={parentIds}
         folders={folders}
+        setInFolder={setInFolder}
+        inFolder={inFolder}
       />
       {
         !inSearch?
@@ -45,6 +49,7 @@ function Container(props) {
         setFiles={setFiles}
         setFolderMessage={setFolderMessage}
         setComments={setComments}
+        setAverageStar={setAverageStar}
         parentIds={parentIds}
         folders={folders}
         infoShow={infoShow} 
@@ -54,6 +59,8 @@ function Container(props) {
         orgId={orgId}
         files={files}
         folderMessage={folderMessage}
+        setInFolder={setInFolder}
+        inFolder={inFolder}
       />
         :
       <DocumentSearch 
@@ -66,6 +73,7 @@ function Container(props) {
         setFiles={setFiles}
         setFolderMessage={setFolderMessage}
         setComments={setComments}
+        setAverageStar={setAverageStar}
         parentIds={parentIds}
         folders={folders}
         infoShow={infoShow} 
@@ -75,6 +83,7 @@ function Container(props) {
         orgId={orgId}
         files={files}
         folderMessage={folderMessage}
+        averageStar={averageStar}
       />
       
 
@@ -87,6 +96,7 @@ function Container(props) {
         fileMessage={fileMessage}
         folderMessage={folderMessage}
         comments={comments}
+        averageStar={averageStar}
       />
     </div>
   );

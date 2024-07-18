@@ -14,6 +14,8 @@ function Info(props) {
 
   //路由导航, 不过在这个组件下面好像没啥用
   const navi=useNavigate()
+  //知识平均分(bug补全)
+  
   // 评论的打分
   const [star, setStar]=useState(0)
   // 评论框的内容
@@ -150,6 +152,9 @@ function Info(props) {
     //加载当前文件上的所有标签
 
     //加载取得当前的所有标签
+
+    
+
     
 
   },[])
@@ -240,7 +245,8 @@ function Info(props) {
       </tr>
     </table>  
     <br></br>
-    <Rate disabled defaultValue={4} />
+    
+    <Rate disabled value={props.averageStar} />
     {/*评论内容*/}
     <div style={{
       backgroundColor:'rgb(229, 229, 229)',

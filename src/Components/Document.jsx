@@ -171,14 +171,6 @@ function Document(props) {
     setIsModalOpenAddFolder(true);
   };
   const handleOkAddFolder = () => {
-    console.log(
-      {
-        orgId:props.orgId,
-        parentId:folderId,
-        name:newFolder,
-        authorId:11 //我知道可能是有点问题, 但是目前还是用管理员账号吧
-      }
-    )
     if(props.orgId==''){//目前还没有进入组织
       alert('请选择一个具体的组织进行文件夹的创建')
     }else{
@@ -187,7 +179,7 @@ function Document(props) {
           orgId:props.orgId,
           parentId:folderId,
           name:newFolder,
-          authorId: localStorage.getItem('orgId') //我知道可能是有点问题, 但是目前还是用管理员账号吧
+          authorId: localStorage.getItem('userId') 
         }
       })
       .then(response => {
@@ -206,7 +198,7 @@ function Document(props) {
   };
 
   //进入文件夹内部
-  const [inFolder, setInFolder]=useState(false)
+  
   //进入文件夹以后
   const accessFolder=(item)=>{ //参数为当前文件的信息
     setFolderId(item.folderId)
@@ -214,7 +206,7 @@ function Document(props) {
     props.setParentIds([...props.parentIds, item.folderId+''])
     console.log('进入文件夹', item.folderId)
     //然后设置进入的文件夹
-    setInFolder(true)
+    props.setInFolder(true)
     console.log({
       orgId:props.orgId,
       parentId:item.folderId+''
@@ -260,7 +252,7 @@ function Document(props) {
     console.log(arr)
     props.setParentIds(arr)
     if(arr.length==1){
-      setInFolder(false)
+      props.setInFolder(false)
     }
 
     axios.get('http://localhost:8080/folder/getByParentIdAndOrgId', {
@@ -502,7 +494,7 @@ function Document(props) {
               {/*历史浏览记录*/}
               <FieldTimeOutlined style={{marginRight:20}} onClick={showDrawer}/>
               {/*回滚按钮(用于在文件夹中进行回退)*/}
-              {inFolder && <RollbackOutlined style={{marginRight:20}} onClick={exitFolder}/>}
+              {props.inFolder && <RollbackOutlined style={{marginRight:20}} onClick={exitFolder}/>}
               {/*文件弹窗*/}
               <FolderAddOutlined style={{marginRight:20}} onClick={showModalAddFolder}/>
               <Modal  title="新增文件夹" open={isModalOpenAddFolder} onOk={handleOkAddFolder} onCancel={handleCancelAddFolder}>
@@ -602,7 +594,7 @@ function Document(props) {
                   <div style={{ height:100, width:100}}>
                     {/*点击页面实现功能
                     */}
-                     <FolderOutlined  style={{fontSize:100, color:'orange'}} onClick={()=>setInFolder(true)}/> 
+                     <FolderOutlined  style={{fontSize:100, color:'orange'}} onClick={()=>props.setInFolder(true)}/> 
                     </div>
                   <div style={{ textAlign:'center'}}>{item.name}</div>
 
@@ -652,6 +644,16 @@ function Document(props) {
                     props.setFileMessage(item)
                     getCommentsByKnowId(item)
                     setBrowerRecord(item)//新增浏览记录
+                    //展示平均分数, 但是服务器爆出500错误
+                    axios.get('http://localhost:8080/evaluate/getAvg', {
+                      params: {
+                        knowId:item.knowId,
+                      }
+                    })
+                    .then(response => {
+                      console.log('平均分',response.data.data)
+                      props.setAverageStar(response.data.data)
+                    })
                 }}
                 onContextMenu={(event)=>{ //一个右键展示预览文件的方法, 后面可能回换成别的东西
                   //首先阻止浏览器自己的页面

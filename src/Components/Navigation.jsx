@@ -128,6 +128,8 @@ function Navigation(props) {
           getAllFolderByOrgIdAndParentId(e[e.length-1],'0') //获取所有的文件夹信息
           props.setOrgId(e[e.length-1])
           getAllFilesByOrgIdAndParentId(e[e.length-1],'0') //获取所有的文件信息
+          props.setParentIds(['0'])
+          props.setInFolder(false)
         }
     }
     const onClick = (e) => {
@@ -144,6 +146,8 @@ function Navigation(props) {
         getAllFilesByOrgIdAndParentId(e.key,p[p.length-1])//获取所有的文件
         console.log('获取文件',e.key,p[p.length-1])
         props.setOrgId(e.key)
+        props.setParentIds(['0'])
+        props.setInFolder(false)
 
     };
     //关于在根目录新增文件的弹窗
