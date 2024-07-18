@@ -1,66 +1,35 @@
 import { Rate,Avatar, Button, Modal} from 'antd';
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
-import React, { createElement, useState } from 'react';
+import React, { createElement, useEffect, useState } from 'react';
 import { Input,Table } from 'antd';
+import axios from 'axios';
 const { TextArea } = Input;
 
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: () => <a>Delete</a>,
-  },
-];
-const datas = [
-  {
-    key: 1,
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    description: <div>内部消息暂时不对外开放, 时间轴按照区域进行获取2</div>,
-  },
-  {
-    key: 2,
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    description: <div>内部消息暂时不对外开放</div>,
-  },
-  {
-    key: 3,
-    name: 'Star light',
-    age: 29,
-    address: 'Jiangsu No. 1 Lake Park',
-    description: <div>内部消息暂时不对外开放</div>,
-  },
-  {
-    key: 4,
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    description: <div>内部消息暂时不对外开放</div>,
-  },
-];
+
+
 
 
 
 function EventTable(data) {
+  const columns = [
+    {
+      title: 'AppId',
+      dataIndex: 'appId',
+      key: 'appId',
+    },
+    {
+      title: 'KnowId',
+      dataIndex: 'knowId',
+      key: 'knowId',
+    },
+    {
+      title: 'userId',
+      dataIndex: 'appId',
+      key: 'appId',
+      render: (appId) => <Button onClick={()=>deleteApproval(appId)}>删除申请</Button>,
+    },
+  ];
+  const [approvals, setApprovals]=useState([])
   const handleOk = () => {
     data.isModalOpen.setOpen(false);
   };
@@ -68,12 +37,43 @@ function EventTable(data) {
   const handleCancel = () => {
     data.isModalOpen.setOpen(false)
   }
+  const deleteApproval=(appId)=>{
+    axios.get('http://localhost:8080/approval/delete', {
+      params: {
+        appId:appId
+      }
+    })
+    .then(response => {
+      console.log(response.data.data)
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+
+  }
+
+  useEffect(()=>{
+    axios.get('http://localhost:8080/approval/getByUserId', {
+      params: {
+        userId:localStorage.getItem('userId')
+      }
+    })
+    .then(response => {
+      console.log(response.data.data)
+      setApprovals(response.data.data)
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+  },[])
   return (
-    <Modal title="权限申请/审批" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} style={{width:200}}>
+    <Modal title="我的申请" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} style={{width:200}}>
      <Table
         columns={columns}
         expandable={{
-          expandedRowRender: (record) => {
+          expandedRowRender: (record) => { //这里说的是每一条记录
             console.log(data)
               return (
                 <p
@@ -81,13 +81,13 @@ function EventTable(data) {
                     margin: 0,
                   }}
                 >
-                  {record.description}
+                  {record.statu==0?"还没有审批":'审批结束哩'}
                 </p>
               )
           },
           rowExpandable: (record) => record.name !== 'Not Expandable',
         }}
-        dataSource={datas}
+        dataSource={approvals}
       />
     </Modal>
   )

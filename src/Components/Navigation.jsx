@@ -2,8 +2,9 @@ import './ComCss.css'
 import '../styles/space.css'
 import { AppstoreOutlined, FolderOutlined , SettingOutlined, FolderOpenOutlined, PlusCircleOutlined,DatabaseOutlined } from '@ant-design/icons';
 import { FloatButton, Menu,Modal,Input } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext} from 'react';
 import axios from 'axios';
+import { AuthContext } from '../AuthProvider';
 
 //清理节点的方法
 function cleanEmptyChildren(node) {  
@@ -64,6 +65,7 @@ function buildTree(data) {
 
 
 function Navigation(props) {
+    const {inSearch, setInSearch, searchs,SetSearchs }=useContext(AuthContext)
     const [openFolder,setOpenFolder]=useState('1')
     const [org,setOrg]=useState([])
     //获取该组织,该文件夹下面所有的文件
@@ -118,6 +120,7 @@ function Navigation(props) {
         //数组的最后一个即为最后一个打开的组织的orgid
         //展示组织数据
         props.setInfoShow('1') 
+        setInSearch(false)
         // 这里的key就是id,这里一会需要根据key获取组织的基本信息
         if(e.length>=1){
           props.setMsg(e[e.length-1])   //  虽然叫做msg但其实是id
@@ -130,6 +133,7 @@ function Navigation(props) {
         }
     }
     const onClick = (e) => {
+      setInSearch(false)
         //展示组织数据
         props.setInfoShow('1') 
         // 这里的key就是id,这里一会需要根据key获取组织的基本信息

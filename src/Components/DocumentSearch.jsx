@@ -5,12 +5,13 @@ import Search from 'antd/es/input/Search';
 import { CloudUploadOutlined,FolderOutlined,FileOutlined,FileJpgOutlined ,SnippetsOutlined,EditOutlined,DeleteOutlined,RollbackOutlined, DiffFilled, DiffOutlined, FolderAddOutlined, ArrowDownOutlined, InfoCircleOutlined, FieldTimeOutlined   } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
 import { Button, Modal, Divider, Flex, Tree,Tag,Popover } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import FileView from '../Tools/fileView';
 import axios from 'axios';
 import Info from './Info';
+import { AuthContext } from '../AuthProvider';
 const { Dragger } = Upload;
 
 
@@ -115,7 +116,8 @@ const props = {
   },
 };
 
-function Document(props) {
+function DocumentSearch(props) {
+  const {inSearch, setInSearch, searchs,SetSearchs }=useContext(AuthContext)
   //关于选中了哪个文件(这里可能需要大改)
   const [fileurl, setfileurl]=useState('')
   //关于文件预览弹窗的方式
@@ -204,80 +206,6 @@ function Document(props) {
   const handleCancelAddFolder = () => {
     setIsModalOpenAddFolder(false);
   };
-
-  //进入文件夹内部
-  const [inFolder, setInFolder]=useState(false)
-  //进入文件夹以后
-  const accessFolder=(item)=>{ //参数为当前文件的信息
-    setFolderId(item.folderId)
-    //先修改parents
-    props.setParentIds([...props.parentIds, item.folderId+''])
-    console.log('进入文件夹', item.folderId)
-    //然后设置进入的文件夹
-    setInFolder(true)
-    console.log({
-      orgId:props.orgId,
-      parentId:item.folderId+''
-    })
-    //获取更新全部的文件夹
-    axios.get('http://localhost:8080/folder/getByParentIdAndOrgId', {
-      params: {
-        orgId:props.orgId,
-        parentId:item.folderId+''
-      }
-    })
-    .then(response => {
-      console.log(response.data)
-      props.setFolders(response.data.data)
-    })
-    .catch(error => {
-      // 处理请求错误
-      console.error(error);
-    });
-
-    //获取更新全部的文件
-    axios.get('http://localhost:8080/knowledge/getByFolderIdAndOrgId', {
-      params: {
-        orgId:props.orgId,
-        folderId:item.folderId+''
-      }
-    })
-    .then(response => {
-      console.log('获取文件为',response.data)
-      props.setFiles(response.data.data)
-    })
-    .catch(error => {
-      // 处理请求错误
-      console.error(error);
-    });
-  }
-  //从文件夹中退出
-  const exitFolder=()=>{
-    //先设置一下parentIds的长度
-    const a=props.orgId
-    const arr = props.parentIds
-    arr.pop()
-    console.log(arr)
-    props.setParentIds(arr)
-    if(arr.length==1){
-      setInFolder(false)
-    }
-
-    axios.get('http://localhost:8080/folder/getByParentIdAndOrgId', {
-      params: {
-        orgId:props.orgId,
-        parentId:arr[arr.length-1]
-      }
-    })
-    .then(response => {
-      props.setFolders(response.data.data)
-    })
-    .catch(error => {
-      // 处理请求错误
-      console.error(error);
-    });
-
-  }
   //关于修改文件夹的方法
   const [folderId, setFolderId]=useState('0')
   const [nameOfFolder, setNameOfFolder]=useState('')
@@ -496,181 +424,13 @@ function Document(props) {
     <div className='docu radium'>
       {/*上载和调整按钮*/}
       <div style={{display:'flex',justifyContent:'space-between' }}>
-        <h1 style={{marginBottom:20}}>文件列表(9)</h1>
-        <div className='div-center' style={{fontSize:40}}>
-          {props.org}
-              {/*历史浏览记录*/}
-              <FieldTimeOutlined style={{marginRight:20}} onClick={showDrawer}/>
-              {/*回滚按钮(用于在文件夹中进行回退)*/}
-              {inFolder && <RollbackOutlined style={{marginRight:20}} onClick={exitFolder}/>}
-              {/*文件弹窗*/}
-              <FolderAddOutlined style={{marginRight:20}} onClick={showModalAddFolder}/>
-              <Modal  title="新增文件夹" open={isModalOpenAddFolder} onOk={handleOkAddFolder} onCancel={handleCancelAddFolder}>
-                <Input onChange={(e)=>setNewFolder(e.target.value)}/>
-              </Modal>
-              {/*文件(知识)上传按钮*/}
-              <DiffOutlined style={{marginRight:10}} onClick={showModal}/>
-              <Modal title="上传文件" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <div style={{display:'flex', justifyContent:'center'}}>
-                  <div style={{
-                    width:600,
-                  }}>
-                    {/*文件上传框*/}
-                     <div style={{height:120, margin:10, marginBottom:50}}>
-                      <Dragger {...props} >
-                        <p className="ant-upload-drag-icon">
-                          <InboxOutlined />
-                        </p>
-                        <p className="ant-upload-text">点击上传文件</p>
-                      </Dragger>
-                     </div>
-                     {/* 文件名称 */}
-                     <div>
-                      <span style={{color:'red'}}>*</span>文件名称:
-                      <Input placeholder='输入文件名称' onChange={(e)=>{setFilename(e.target.value)}}></Input>
-                     </div>
-                     
-                     {/* 标签 */}
-                     <div style={{margin:10, marginTop:30}}>
-                      <Tag color="magenta">magenta</Tag>
-                      <Tag color="red">red</Tag>
-                      <Tag color="volcano">volcano</Tag>
-                      <Tag color="lime">+</Tag>
-                     </div>
-                     {/* 上传路径 */}
-                     <div style={{margin:10, marginTop:30}}>
-                        一级目录/二级目录
-                     </div>
-
-
-                  </div>
-                  <div style={{
-                    width:600,
-                  }}>
-                    <Tree
-                      checkable
-                      onExpand={onExpand}
-                      expandedKeys={expandedKeys}
-                      autoExpandParent={autoExpandParent}
-                      onCheck={onCheck}
-                      checkedKeys={checkedKeys}
-                      onSelect={onSelect}
-                      selectedKeys={selectedKeys}
-                      treeData={treeData}
-                      style={{
-                         backgroundColor:'rgb(229, 229, 229)',
-                         margin:5,
-                         overflow:'auto',
-                         border:'none',
-                         borderRadius:8
-                      }}
-                    />
-                  </div>
-                </div>
-              </Modal>
-              <Switch style={{margin:20}} checkedChildren="图标" unCheckedChildren="条目" defaultChecked onChange={onChangeSwitch} />
-        </div>
+        <h1 style={{marginBottom:20}}>搜索结果展示</h1>
       </div>
-
-      {/* 检测文件列表数目*/}
-      
-
-      {/*面包屑导航*/}
-      <Breadcrumb
-        items={[
-          {title: 'Home',},
-          {title: <a href="">Application Center</a>,},
-          {title: <a href="">Application List</a>,},
-          {title: 'An Application',},
-        ]}
-        />
-
-      {/*下拉框子*/}
-      <div style={{display:'flex', justifyContent:'space-between'}}>
-        {/*关于日期*/}
-        <div>
-          <Cascader style={{margin:10,width:150}} options={options} onChange={onChange} placeholder="Please select" />
-          <Cascader style={{margin:10,width:150}} options={options} onChange={(value)=> console.log(value)} placeholder="Please select" />
-          <DatePicker  style={{width:200}} onChange={(date, dateString) => { console.log(date, dateString);}} needConfirm />
-        </div>
-        {/*文件上传按钮*/}
-
-        {/*关于搜索框*/}
-        <Search placeholder="input search text" style={{width:400}} className='div-center' onSearch={(value)=>{console.log("")}} enterButton  /> 
-        {/*一些关于文件夹和乱七八糟的东西(具体的文件内容)*/}
-      </div>
-
       {/*文件夹的两种展示模式*/}
       <div style={{height:'80%',overflowY:'auto',overflowX:'hidden'}}>
         <Grid container spacing={2}>
-          {props.folders.map((item)=>
-            (
-                switchOpen?
-                <Grid item xs={2}>
-                  <div className='file-blocks' onClick={()=>{
-                    props.setInfoShow('3')//展示文件夹信息
-                    props.setMsg(item.name) //设置文件夹名字
-                    props.setFolderMessage(item)
-                    accessFolder(item)
-                }}
-              >
-                <Popover content={
-                  <div>
-                    <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
-                      showModalChangeFolder(e)
-                      setFolderId(item.folderId)
-                    }}><EditOutlined />重命名文件夹</Button><br/>
-                    
-                    <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
-                      deleteFolder(e,item)
-                    }}><DeleteOutlined />删除文件夹</Button>
-                  </div>
-                } >
-                  <div style={{ height:100, width:100}}>
-                    {/*点击页面实现功能
-                    */}
-                     <FolderOutlined  style={{fontSize:100, color:'orange'}} onClick={()=>setInFolder(true)}/> 
-                    </div>
-                  <div style={{ textAlign:'center'}}>{item.name}</div>
-
-                </Popover>
-              </div>
-          </Grid>
-            :
-          <Grid  item xs={12}
-            onClick={()=>{
-              props.setInfoShow('3')
-              props.setMsg(item.name)
-              props.setFolderMessage(item)
-              accessFolder(item)
-          }}
-          onContextMenu={(event)=>{
-            //首先阻止浏览器自己的页面
-            event.preventDefault(); // 阻止浏览器默认的右键菜单
-            setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
-            show1()
-            //将文件的修整和信息放在信息栏和别的啥
-          }}
-            style={{margin:10, backgroundColor:'white',padding:10, borderRadius:10}}> 
-                  <FolderOutlined  style={{marginRight:10}}/> 
-                  <Popover content={
-                        <div>
-                          <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
-                              showModalChangeFolder(e)
-                              setFolderId(item.folderId)
-                            }}><EditOutlined />重命名文件夹</Button><br/>
-                          <Button style={{marginBottom:10,border:'none' }}onClick={(e)=>{
-                              deleteFolder(e,item)
-                            }}><DeleteOutlined />删除文件夹</Button>
-                        </div>
-                      } >  {item.name}
-                </Popover>
-            </Grid>
-            ))}
-
-
             {/* 关于文件的具体部分*/}
-            {props.files.map((item)=>
+            {searchs.map((item)=>
             (
                 switchOpen?
                 <Grid item xs={2}>
@@ -1015,65 +775,5 @@ function Document(props) {
   );
 }
 
-export default  Document;
+export default  DocumentSearch;
 
-/*
-              switchOpen?
-              <Grid xs={2}>
-                每一个图片都有对应的模块
-                 右键点击实现预览, 左键点击实现基本信息展示
-                <div className='file-blocks' onClick={()=>{
-                  props.setInfoShow('2')
-                  props.setMsg(item.name)
-              }}
-              onContextMenu={(event)=>{
-                //首先阻止浏览器自己的页面
-                event.preventDefault(); // 阻止浏览器默认的右键菜单
-                setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
-                show1()
-                //将文件的修整和信息放在信息栏和别的啥
-              }}
-            >
-              <Popover content={
-                <div>
-                  <Button style={{marginBottom:10,border:'none' }}><EditOutlined />修改知识</Button><br/>
-                  <Button style={{marginBottom:10,border:'none' }}><DeleteOutlined />删除知识</Button>
-                </div>
-              } >
-                <div style={{ height:100, width:100}}>
-                  {    item.type==1 && <FolderOutlined  style={{fontSize:100, color:'orange'}}/> }
-                  {    item.type==2 && <FileOutlined   style={{fontSize:100}}/> }
-                  {    item.type==3 && <FileJpgOutlined   style={{fontSize:100,color:'red'}}/> }
-                  </div>
-                <div style={{ textAlign:'center'}}>{item.name}</div>
-
-              </Popover>
-            </div>
-        </Grid>
-          :
-          
-        <Grid xs={12}
-          onClick={()=>{
-            props.setInfoShow('2')
-            props.setMsg(item.name)
-        }}
-        onContextMenu={(event)=>{
-          //首先阻止浏览器自己的页面
-          event.preventDefault(); // 阻止浏览器默认的右键菜单
-          setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
-          show1()
-          //将文件的修整和信息放在信息栏和别的啥
-        }}
-          style={{margin:10, backgroundColor:'white',padding:10, borderRadius:10}}> 
-                  {    item.type==1 && <FolderOutlined  style={{marginRight:10}}/> }
-                  {    item.type==2 && <FileOutlined    style={{marginRight:10}}/> }
-                  {    item.type==3 && <FileJpgOutlined style={{marginRight:10}}/> }
-                <Popover content={
-                      <div>
-                        <Button style={{marginBottom:10,border:'none' }}><EditOutlined />修改知识</Button><br/>
-                        <Button style={{marginBottom:10,border:'none' }}><DeleteOutlined />删除知识</Button>
-                      </div>
-                    } >  {item.name}
-              </Popover>
-          </Grid>
-*/

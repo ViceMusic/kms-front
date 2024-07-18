@@ -14,9 +14,21 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
       setIsLoggedIn(false);
     };
+
+    //检测是否在登录状态
+    const [ inSearch, setInSearch1]=useState(false)
+    //获取到搜索以后展示的文件内容
+    const [ searchs,SetSearchs1]=useState([])
+
+    const setInSearch=(a)=>{
+      setInSearch1(a)
+    }
+    const SetSearchs=(a)=>{
+      SetSearchs1(a)
+    }
   
     return (
-      <AuthContext.Provider value={{ isLoggedIn,login, logout }}>
+      <AuthContext.Provider value={{ isLoggedIn,login, logout,inSearch, setInSearch, searchs,SetSearchs }}>
         {children} 
       </AuthContext.Provider>
     );
