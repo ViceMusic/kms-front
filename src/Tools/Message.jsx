@@ -20,30 +20,32 @@ function Message(data) {
   const handleCancel = () => {
     data.isModalOpen.setOpen(false)
   }
-  const canApproval=(appId)=>{
+  //审批通过的方法
+  const canApproval=(record)=>{
     axios.get('http://localhost:8080/approval/update', {
       params: {
-        appId:appId,
-        statue:'1'
+        appId:record.appId,
+        status:'1'
       }
     })
     .then(response => {
-      console.log('审批通过',response.data.data)
+      alert('审批完成, 刷新页面后显示')
     })
     .catch(error => {
       // 处理请求错误
       console.error(error);
     });
   }
-  const canNotApproval=(appId)=>{
+  //审批不通过的方法
+  const canNotApproval=(record)=>{
     axios.get('http://localhost:8080/approval/update', {
       params: {
-        appId:appId,
-        statue:'2'
+        appId:record.appId,
+        status:'2'
       }
     })
     .then(response => {
-      console.log('审批不通过',response.data.data)
+      alert('审批完成, 刷新页面后显示')
     })
     .catch(error => {
       // 处理请求错误
@@ -56,30 +58,38 @@ function Message(data) {
         authorId:localStorage.getItem('userId')
       }
     })
-    .then(response => {
+    .then(response => {//获取该id下面全部的提交的申请
       console.log(response.data.data)
       setApprovals(response.data.data)
     })
-    .catch(error => {
-      // 处理请求错误
-      console.error(error);
-    });
   },[])
   return (
-    <Modal title="审批列表" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} width={1400}>
-        <Table dataSource={approvals}>
-            <Column title="AppId" dataIndex="appId" key="appId" />
-            <Column title="KnowId" dataIndex="knowId" key="knowId" />
-            <Column title="Status" dataIndex="status" key="status" />
-            <Column title="action" dataIndex="appId" key="appId" 
-              render={(appId) => (
-                <>
-                      <Button onClick={()=>canApproval(appId)}> 同意申请</Button>
-                      <Button onClick={()=>canNotApproval(appId)}> 拒绝申请</Button>   
-                </>
-              )}
-            />
-            
+    <Modal title="审批列表" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} width={1040}>
+      <Table dataSource={approvals}>
+          <Column title="申请编号" dataIndex="appId" key="appId" />
+          <Column title="申请用户id" dataIndex="userId" key="userId" />
+          <Column title="申请知识id" dataIndex="knowId" key="knowId" />
+          <Column title="当前状态" dataIndex="status" key="status" 
+            render={(text) => {
+                  if(text===0) return <p>尚未审批</p>
+                  else if(text===1) return <p>审批通过</p>
+                  else if(text===2) return <p>审批不通过</p>
+            }}
+          />
+          <Column
+            title="Action"
+            key="action"
+            render={(_, record) => {
+              console.log(record)
+              return <Space size="middle">
+                <a onClick={()=>{
+                  canApproval(record)
+                }}>审批通过</a>
+                <a onClick={()=>{
+                  canNotApproval(record)
+                }}>审批不通过</a>
+                </Space>
+            }}/>
         </Table>
     </Modal>
   )

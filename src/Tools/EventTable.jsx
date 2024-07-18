@@ -1,34 +1,44 @@
-import { Rate,Avatar, Button, Modal} from 'antd';
+import { Rate,Avatar, Button, Modal, Tag, Space} from 'antd';
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons';
 import React, { createElement, useEffect, useState } from 'react';
 import { Input,Table } from 'antd';
 import axios from 'axios';
+import Column from 'antd/es/table/Column';
 const { TextArea } = Input;
 
 
-
+//展示数据先使用这个
+const data = [
+  {
+    key: '1',
+    firstName: 'John',
+    lastName: 'Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+    tags: ['nice', 'developer'],
+  },
+  {
+    key: '2',
+    firstName: 'Jim',
+    lastName: 'Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+    tags: ['loser'],
+  },
+  {
+    key: '3',
+    firstName: 'Joe',
+    lastName: 'Black',
+    age: 32,
+    address: 'Sydney No. 1 Lake Park',
+    tags: ['cool', 'teacher'],
+  },
+];
 
 
 
 function EventTable(data) {
-  const columns = [
-    {
-      title: 'AppId',
-      dataIndex: 'appId',
-      key: 'appId',
-    },
-    {
-      title: 'KnowId',
-      dataIndex: 'knowId',
-      key: 'knowId',
-    },
-    {
-      title: 'userId',
-      dataIndex: 'appId',
-      key: 'appId',
-      render: (appId) => <Button onClick={()=>deleteApproval(appId)}>删除申请</Button>,
-    },
-  ];
+  
   const [approvals, setApprovals]=useState([])
   const handleOk = () => {
     data.isModalOpen.setOpen(false);
@@ -69,26 +79,43 @@ function EventTable(data) {
     });
   },[])
   return (
+    
     <Modal title="我的申请" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} style={{width:200}}>
-     <Table
-        columns={columns}
-        expandable={{
-          expandedRowRender: (record) => { //这里说的是每一条记录
-            console.log(data)
-              return (
-                <p
-                  style={{
-                    margin: 0,
-                  }}
-                >
-                  {record.statu==0?"还没有审批":'审批结束哩'}
-                </p>
-              )
-          },
-          rowExpandable: (record) => record.name !== 'Not Expandable',
-        }}
-        dataSource={approvals}
-      />
+      <Table dataSource={approvals}>
+          <Column title="申请编号" dataIndex="appId" key="appId" />
+          <Column title="申请用户id" dataIndex="userId" key="userId" />
+          <Column title="申请知识id" dataIndex="knowId" key="knowId" />
+          <Column title="当前状态" dataIndex="status" key="status" 
+            render={(text) => {
+                  if(text===0) return <p>还未审批</p>
+                  else if(text===1) return <p>审批通过</p>
+                  else if(text===2) return <p>审批未通过</p>
+            }}
+          />
+          <Column
+            title="Action"
+            key="action"
+            render={(_, record) => {
+              console.log(record)
+              return <Space size="middle">
+                <a onClick={()=>{
+                  axios.get('http://localhost:8080/approval/delete', {
+                    params: {
+                      appId:record.appId
+                    }
+                  })
+                  .then(response => {
+                    console.log(response.data.data)
+                  })
+                  .catch(error => {
+                    // 处理请求错误
+                    console.error(error);
+                  });
+                }}
+              
+              >移除</a></Space>
+            }}/>
+        </Table>
     </Modal>
   )
 ;
