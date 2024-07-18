@@ -3,7 +3,6 @@ import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined } from '@ant-d
 import React, { createElement, useEffect, useState } from 'react';
 import { Input} from 'antd';
 import { Space, Table, Tag } from 'antd';
-import { effect } from 'vue';
 
 import axios from 'axios';
 
