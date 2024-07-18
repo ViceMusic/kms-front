@@ -19,6 +19,7 @@ function Container(props) {
   const {inSearch, setInSearch, searchs,SetSearchs }=useContext(AuthContext)
   const [averageStar, setAverageStar]=useState(0)
   const [inFolder, setInFolder]=useState(false)//是否在文件夹中(用来展示回退按键的)
+  const [folderId, setFolderId]=useState('0')
   
   
   return (
@@ -36,6 +37,8 @@ function Container(props) {
         folders={folders}
         setInFolder={setInFolder}
         inFolder={inFolder}
+        folderId={folderId}
+        setFolderId={setFolderId}
       />
       {
         !inSearch?
@@ -61,6 +64,8 @@ function Container(props) {
         folderMessage={folderMessage}
         setInFolder={setInFolder}
         inFolder={inFolder}
+        folderId={folderId}
+        setFolderId={setFolderId}
       />
         :
       <DocumentSearch 
@@ -84,6 +89,8 @@ function Container(props) {
         files={files}
         folderMessage={folderMessage}
         averageStar={averageStar}
+        folderId={folderId}
+        setFolderId={setFolderId}
       />
       
 

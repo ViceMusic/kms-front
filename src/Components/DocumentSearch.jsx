@@ -173,21 +173,13 @@ function DocumentSearch(props) {
     setIsModalOpenAddFolder(true);
   };
   const handleOkAddFolder = () => {
-    console.log(
-      {
-        orgId:props.orgId,
-        parentId:folderId,
-        name:newFolder,
-        authorId:11 //我知道可能是有点问题, 但是目前还是用管理员账号吧
-      }
-    )
     if(props.orgId==''){//目前还没有进入组织
       alert('请选择一个具体的组织进行文件夹的创建')
     }else{
       axios.get('http://localhost:8080/folder/insert', {
         params: {
           orgId:props.orgId,
-          parentId:folderId,
+          parentId:props.folderId,
           name:newFolder,
           authorId: localStorage.getItem('orgId') //我知道可能是有点问题, 但是目前还是用管理员账号吧
         }
@@ -207,7 +199,6 @@ function DocumentSearch(props) {
     setIsModalOpenAddFolder(false);
   };
   //关于修改文件夹的方法
-  const [folderId, setFolderId]=useState('0')
   const [nameOfFolder, setNameOfFolder]=useState('')
   const [isModalOpenChangeFolder, setIsModalOpenChangeFolder] = useState(false);
   const showModalChangeFolder = (event) => {
@@ -220,7 +211,7 @@ function DocumentSearch(props) {
     axios.get('http://localhost:8080/folder/update', {
       params: {
         name:nameOfFolder,
-        folderId:folderId
+        folderId:props.folderId
       }
     })
     .then(response => {

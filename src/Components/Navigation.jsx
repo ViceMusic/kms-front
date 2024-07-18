@@ -130,6 +130,7 @@ function Navigation(props) {
           getAllFilesByOrgIdAndParentId(e[e.length-1],'0') //获取所有的文件信息
           props.setParentIds(['0'])
           props.setInFolder(false)
+          props.setFolderId('0')
         }
     }
     const onClick = (e) => {
@@ -148,6 +149,7 @@ function Navigation(props) {
         props.setOrgId(e.key)
         props.setParentIds(['0'])
         props.setInFolder(false)
+        props.setFolderId('0')
 
     };
     //关于在根目录新增文件的弹窗

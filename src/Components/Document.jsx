@@ -177,7 +177,7 @@ function Document(props) {
       axios.get('http://localhost:8080/folder/insert', {
         params: {
           orgId:props.orgId,
-          parentId:folderId,
+          parentId:props.folderId, //确实是这里除了问题
           name:newFolder,
           authorId: localStorage.getItem('userId') 
         }
@@ -201,7 +201,7 @@ function Document(props) {
   
   //进入文件夹以后
   const accessFolder=(item)=>{ //参数为当前文件的信息
-    setFolderId(item.folderId)
+    props.setFolderId(item.folderId)
     //先修改parents
     props.setParentIds([...props.parentIds, item.folderId+''])
     console.log('进入文件夹', item.folderId)
@@ -246,7 +246,7 @@ function Document(props) {
   //从文件夹中退出
   const exitFolder=()=>{
     //先设置一下parentIds的长度
-    const a=props.orgId
+    const a = props.orgId
     const arr = props.parentIds
     arr.pop()
     console.log(arr)
@@ -271,7 +271,7 @@ function Document(props) {
 
   }
   //关于修改文件夹的方法
-  const [folderId, setFolderId]=useState('0')
+  
   const [nameOfFolder, setNameOfFolder]=useState('')
   const [isModalOpenChangeFolder, setIsModalOpenChangeFolder] = useState(false);
   const showModalChangeFolder = (event) => {
@@ -284,7 +284,7 @@ function Document(props) {
     axios.get('http://localhost:8080/folder/update', {
       params: {
         name:nameOfFolder,
-        folderId:folderId
+        folderId:props.folderId
       }
     })
     .then(response => {
@@ -339,7 +339,7 @@ function Document(props) {
       }
     })
     .then(response => {
-      alert('文件夹名称删除完成, 刷新页面予以显示')
+      alert('文件夹名称更新完成, 刷新页面予以显示')
     })
     .catch(error => {
       // 处理请求错误
@@ -523,37 +523,13 @@ function Document(props) {
                      </div>
                      
                      {/* 标签 */}
-                     <div style={{margin:10, marginTop:30}}>
+                     <div style={{margin:10, marginTop:20}}>
                      </div>
-                     {/* 上传路径 */}
-                     <div style={{margin:10, marginTop:30}}>
-                        一级目录/二级目录
-                     </div>
+                     
 
 
                   </div>
-                  <div style={{
-                    width:600,
-                  }}>
-                    <Tree
-                      checkable
-                      onExpand={onExpand}
-                      expandedKeys={expandedKeys}
-                      autoExpandParent={autoExpandParent}
-                      onCheck={onCheck}
-                      checkedKeys={checkedKeys}
-                      onSelect={onSelect}
-                      selectedKeys={selectedKeys}
-                      treeData={treeData}
-                      style={{
-                         backgroundColor:'rgb(229, 229, 229)',
-                         margin:5,
-                         overflow:'auto',
-                         border:'none',
-                         borderRadius:8
-                      }}
-                    />
-                  </div>
+                 
                 </div>
               </Modal>
               <Switch style={{margin:20}} checkedChildren="图标" unCheckedChildren="条目" defaultChecked onChange={onChangeSwitch} />
@@ -583,7 +559,7 @@ function Document(props) {
                   <div>
                     <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
                       showModalChangeFolder(e)
-                      setFolderId(item.folderId)
+                      props.setFolderId(item.folderId)
                     }}><EditOutlined />重命名文件夹</Button><br/>
                     
                     <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
@@ -596,7 +572,7 @@ function Document(props) {
                     */}
                      <FolderOutlined  style={{fontSize:100, color:'orange'}} onClick={()=>props.setInFolder(true)}/> 
                     </div>
-                  <div style={{ textAlign:'center'}}>{item.name}</div>
+                  <div style={{ textAlign:'center'}}>{item.name.length > 4 ? `${item.name.slice(0, 4)}...` : item.name}</div>
 
                 </Popover>
               </div>
@@ -622,13 +598,13 @@ function Document(props) {
                         <div>
                           <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
                               showModalChangeFolder(e)
-                              setFolderId(item.folderId)
+                              props.setFolderId(item.folderId)
                             }}><EditOutlined />重命名文件夹</Button><br/>
                           <Button style={{marginBottom:10,border:'none' }}onClick={(e)=>{
                               deleteFolder(e,item)
                             }}><DeleteOutlined />删除文件夹</Button>
                         </div>
-                      } >  {item.name}
+                      } >  {item.name.length > 4 ? `${item.name.slice(0, 4)}...` : item.name}
                 </Popover>
             </Grid>
             ))}
@@ -785,7 +761,7 @@ function Document(props) {
                     {/*点击页面实现功能*/}
                      <SnippetsOutlined  style={{fontSize:100}}/> 
                     </div>
-                  <div style={{ textAlign:'center'}}>{item.name}</div>
+                  <div style={{ textAlign:'center'}}>{item.name.length > 4 ? `${item.name.slice(0, 4)}...` : item.name}</div>
 
                 </Popover>
               </div>
@@ -921,7 +897,7 @@ function Document(props) {
 
                             }}><DeleteOutlined />删除知识</Button>
                         </div>
-                      } >  {item.name}
+                      } >  {item.name.length > 4 ? `${item.name.slice(0, 4)}...` : item.name}
                 </Popover>
             </Grid>
             ))}
