@@ -105,7 +105,7 @@ function EventTable(data) {
                     }
                   })
                   .then(response => {
-                    console.log(response.data.data)
+                    alert('您的申请已经撤销, 请刷新页面后再看')
                   })
                   .catch(error => {
                     // 处理请求错误
