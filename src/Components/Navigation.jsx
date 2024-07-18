@@ -125,11 +125,9 @@ function Navigation(props) {
         if(e.length>=1){
           props.setMsg(e[e.length-1])   //  虽然叫做msg但其实是id
           getMessageOfOrg(e[e.length-1])// 这个后面应该是还需要进一步改进
-          const p=props.parentIds
-          getAllFolderByOrgIdAndParentId(e[e.length-1],p[p.length-1]) //获取所有的文件夹信息
+          getAllFolderByOrgIdAndParentId(e[e.length-1],'0') //获取所有的文件夹信息
           props.setOrgId(e[e.length-1])
-          getAllFilesByOrgIdAndParentId(e[e.length-1],p[p.length-1]) //获取所有的文件信息
-          console.log(e[e.length-1],p[p.length-1])
+          getAllFilesByOrgIdAndParentId(e[e.length-1],'0') //获取所有的文件信息
         }
     }
     const onClick = (e) => {
