@@ -11,11 +11,13 @@ import Message from '../Tools/Message';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthProvider';
 import axios from 'axios';
+import TagCon from '../Pages/TagCon';
 
 
 
 
 function Header(props) {
+  
   //搜索历史页面
   const [open, setOpen] = useState(false);
   const showDrawer = () => {
@@ -171,6 +173,7 @@ function Header(props) {
       {/*关于内容的小卡片*/}
       <EventTable isModalOpen={{open:isModalOpen, setOpen:()=>setIsModalOpen()}}></EventTable>
       <Message isModalOpen={{open:isModalOpen2, setOpen:()=>setIsModalOpen2()}}></Message>
+      <TagCon backgroundColor='yellow'></TagCon>
       <Drawer title="搜索历史" onClose={onClose} open={open}>
         {searchRecords.map(item=>{
           return <div style={{margin:10}}
