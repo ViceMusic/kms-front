@@ -21,12 +21,9 @@ function TagCon() {
     };
     const handleOk = () => {
       setIsModalOpen(false);
+      console.log(tags)
       //确认标签的内容
-      axios.post('http://localhost:8080/tag/insertBatch', {
-        params: {
-          tags:tags,
-        }
-      })
+      axios.post('http://localhost:8080/tag/insertBatch', tags)
       .then(response => {
         
       })
@@ -54,7 +51,8 @@ function TagCon() {
         }
       })
       .then(response => {
-        setTags(response.data.data)
+        setTags(response.data.data.map(item => item.name))
+        console.log(response.data.data)
       })
       .catch(error => {
         // 处理请求错误
@@ -71,10 +69,23 @@ function TagCon() {
   useEffect(() => {
     editInputRef.current?.focus();
   }, [editInputValue]);
+  //移除标签的方法
   const handleClose = (removedTag) => {
     const newTags = tags.filter((tag) => tag !== removedTag);
     console.log(newTags);
     setTags(newTags);
+    //移除标签
+    axios.get('http://localhost:8080/tag/delete', {
+        params: {
+            name:removedTag
+        }
+      })
+      .then(response => {
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
   };
   const showInput = () => {
     setInputVisible(true);
@@ -83,8 +94,19 @@ function TagCon() {
     setInputValue(e.target.value);
   };
   const handleInputConfirm = () => {
-    if (inputValue && !tags.includes(inputValue)) {
+    if (inputValue && !tags.includes(inputValue)) {//如果已经有重复的就不会插入
       setTags([...tags, inputValue]);
+      axios.get('http://localhost:8080/tag/insert', {
+        params: {
+            name:inputValue
+        }
+      })
+      .then(response => {
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
     }
     setInputVisible(false);
     setInputValue('');

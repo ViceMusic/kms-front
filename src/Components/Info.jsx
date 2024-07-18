@@ -1,5 +1,5 @@
 import './ComCss.css'
-import { Rate,Avatar, Button, Tag, Modal} from 'antd';
+import { Rate,Avatar, Button, Tag, Modal, Drawer, Checkbox} from 'antd';
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined ,DeleteOutlined} from '@ant-design/icons';
 import React, { createElement, useEffect, useState } from 'react';
 import { Input } from 'antd';
@@ -7,19 +7,11 @@ import axios from 'axios';
 import { useNavigate, useNavigation } from 'react-router-dom';
 const { TextArea } = Input;
 
- const comments=[
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-  {id:'8008008000', name:'张三', comment:'好用的', ratio:3},
-]
+ 
 
 
 function Info(props) {
+
   //路由导航, 不过在这个组件下面好像没啥用
   const navi=useNavigate()
   // 评论的打分
@@ -143,7 +135,24 @@ function Info(props) {
       console.error(error);
     });
 
+
+
   }
+      //标签选择
+      const [open, setOpen] = useState(false);
+      const showDrawer = () => {
+        setOpen(true);
+      };
+      const onClose = () => {
+        setOpen(false);
+      };
+  useEffect(()=>{
+    //加载当前文件上的所有标签
+
+    //加载取得当前的所有标签
+    
+
+  },[])
   return (
     <div className='info radium'> 
     {/* 暂时没有展示信息的对应格式*/}
@@ -158,9 +167,7 @@ function Info(props) {
           <h3>{props.orgMessage.parentId}</h3><br/>
           <h3>{props.orgMessage.folderId}</h3><br/>
         */}
-        <Tag color="orange">tag1</Tag>
-        <Tag color="red">tag</Tag>
-        <Tag color="blue">tag</Tag>
+        
         <br/><br/>
           <table >
           <tr>
@@ -199,9 +206,24 @@ function Info(props) {
     <>
     {/* 具体的信息以及评分 */}
     <h3>{props.fileMessage.name}</h3><br/>
-    <Tag color="orange">tag</Tag>
-    <Tag color="red">tag</Tag>
-    <Tag color="blue">tag</Tag>
+        {
+          /*
+          {tags.map((item,index)=>{
+              if(index%3==0){return <Tag color="orange">{item.name}</Tag>}
+              else if(index%2==0){return <Tag color="red">{item.name}</Tag>}
+              else if(index%1==0){return <Tag color="blue">{item.name}</Tag> }
+        })}
+        <Tag color="blue" onClick={showDrawer}>修改标签</Tag>
+        <Drawer title="文件的标签编辑" onClose={onClose} open={open}>
+          请在标签中选择文件标签
+          {allTags.map((item,index)=>{
+            <Checkbox onChange={(e)=>{
+              console.log('选中',e.target.checked)
+            }}>{item.name}</Checkbox>
+          })}
+        </Drawer>
+          */
+        }
     <br/><br/>
     <table >
       <tr>
@@ -269,9 +291,6 @@ function Info(props) {
       <>
         <h3>{props.folderMessage.name}</h3><br/>
         {/*此处还可以添加一大堆属性*/}
-        <Tag color="orange">tag1</Tag>
-        <Tag color="red">tag</Tag>
-        <Tag color="blue">tag</Tag>
         <br/><br/>
           <table >
           <tr>

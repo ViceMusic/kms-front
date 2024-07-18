@@ -532,10 +532,6 @@ function Document(props) {
                      
                      {/* 标签 */}
                      <div style={{margin:10, marginTop:30}}>
-                      <Tag color="magenta">magenta</Tag>
-                      <Tag color="red">red</Tag>
-                      <Tag color="volcano">volcano</Tag>
-                      <Tag color="lime">+</Tag>
                      </div>
                      {/* 上传路径 */}
                      <div style={{margin:10, marginTop:30}}>
@@ -575,30 +571,7 @@ function Document(props) {
       {/* 检测文件列表数目*/}
       
 
-      {/*面包屑导航*/}
-      <Breadcrumb
-        items={[
-          {title: 'Home',},
-          {title: <a href="">Application Center</a>,},
-          {title: <a href="">Application List</a>,},
-          {title: 'An Application',},
-        ]}
-        />
-
-      {/*下拉框子*/}
-      <div style={{display:'flex', justifyContent:'space-between'}}>
-        {/*关于日期*/}
-        <div>
-          <Cascader style={{margin:10,width:150}} options={options} onChange={onChange} placeholder="Please select" />
-          <Cascader style={{margin:10,width:150}} options={options} onChange={(value)=> console.log(value)} placeholder="Please select" />
-          <DatePicker  style={{width:200}} onChange={(date, dateString) => { console.log(date, dateString);}} needConfirm />
-        </div>
-        {/*文件上传按钮*/}
-
-        {/*关于搜索框*/}
-        <Search placeholder="input search text" style={{width:400}} className='div-center' onSearch={(value)=>{console.log("")}} enterButton  /> 
-        {/*一些关于文件夹和乱七八糟的东西(具体的文件内容)*/}
-      </div>
+      
 
       {/*文件夹的两种展示模式*/}
       <div style={{height:'80%',overflowY:'auto',overflowX:'hidden'}}>

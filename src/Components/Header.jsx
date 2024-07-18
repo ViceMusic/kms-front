@@ -125,10 +125,10 @@ function Header(props) {
       {/*header左侧栏目*/}
       <div className='headerSon' style={{fontSize:30}}>
         {/*公司的名字和logo*/}
-        <div className='font-backcolor-white div-center' > 
+        {/*<div className='font-backcolor-white div-center' > 
             <div style={{backgroundColor:'grey', height:30,width:30, margin:10}}></div>
             <div className='font-backcolor-white' style={{fontSize:20, margin:20}}>公司名称</div>
-        </div>
+        </div>*/}
         {/*关于系统的名称的几个大字*/}
         <div className='thick-italic font-backcolor-white div-center'> 知识库管理系统</div>
         {/*关于提问框*/}
@@ -173,7 +173,9 @@ function Header(props) {
       {/*关于内容的小卡片*/}
       <EventTable isModalOpen={{open:isModalOpen, setOpen:()=>setIsModalOpen()}}></EventTable>
       <Message isModalOpen={{open:isModalOpen2, setOpen:()=>setIsModalOpen2()}}></Message>
+      {/*
       <TagCon backgroundColor='yellow'></TagCon>
+      */}
       <Drawer title="搜索历史" onClose={onClose} open={open}>
         {searchRecords.map(item=>{
           return <div style={{margin:10}}
