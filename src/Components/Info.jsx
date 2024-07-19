@@ -281,7 +281,7 @@ function Info(props) {
           {item.star==4 && <Rate disabled defaultValue={4} style={{fontSize:15}}></Rate>}
           {item.star==5 && <Rate disabled defaultValue={5} style={{fontSize:15}}></Rate>}
         
-          <div style={{margin:10}}>{item.star}{item.text}</div>
+          <div style={{margin:10}}>{item.text}</div>
         </div>
       )}
     </div>

@@ -11,6 +11,7 @@ import { message, Upload } from 'antd';
 import FileView from '../Tools/fileView';
 import axios from 'axios';
 import Info from './Info';
+import KnowName from '../Tools/knowName';
 const { Dragger } = Upload;
 
 
@@ -856,6 +857,7 @@ function Document(props) {
               }
             })
             .then(response => {
+              alert('已经成功清空所有浏览记录')
               console.log(response.data.data)
             })
             .catch(error => {
@@ -867,9 +869,9 @@ function Document(props) {
          {browers.map((item)=>{
               return <>
               <div> 
-                访问文件:{item.browseId}
+                访问文件:<KnowName ID={item.knowId}></KnowName><br></br>
                 访问时间:{item.tt}
-                <Button onClick={
+                <Button style={{margin:10}} onClick={
                   ()=>{
                     alert('已经删除')
                     axios.get('http://localhost:8080/browse/deleteByBrowseId', {
@@ -884,7 +886,7 @@ function Document(props) {
                       console.error(error);
                     })
                   }
-                }>删除该浏览记录</Button>
+                }>移除</Button>
               </div><br></br><br></br>
               </>
          })}
