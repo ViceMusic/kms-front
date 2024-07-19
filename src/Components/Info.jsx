@@ -274,8 +274,14 @@ function Info(props) {
             {'(自己)'}
             <DeleteOutlined style={{marginLeft:30}} onClick={()=>deleteComment(item)}/>
           </div>}
-          <Rate disabled defaultValue={item.star} style={{fontSize:15}}></Rate>
-          <div style={{margin:10}}>{item.text}</div>
+          {item.star==0 && <Rate disabled defaultValue={0} style={{fontSize:15}}></Rate>}
+          {item.star==1 && <Rate disabled defaultValue={1} style={{fontSize:15}}></Rate>}
+          {item.star==2 && <Rate disabled defaultValue={2} style={{fontSize:15}}></Rate>}
+          {item.star==3 && <Rate disabled defaultValue={3} style={{fontSize:15}}></Rate>}
+          {item.star==4 && <Rate disabled defaultValue={4} style={{fontSize:15}}></Rate>}
+          {item.star==5 && <Rate disabled defaultValue={5} style={{fontSize:15}}></Rate>}
+        
+          <div style={{margin:10}}>{item.star}{item.text}</div>
         </div>
       )}
     </div>

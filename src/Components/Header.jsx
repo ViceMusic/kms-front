@@ -21,6 +21,8 @@ function Header(props) {
   //gpt随机返回几个数据
   const [gpt,setGpt]=useState(['没东西'])
   const [hot,setHot]=useState(['没东西'])
+  const [aver,setAver]=useState(['没东西'])
+
 
 
   //关于收藏的展示
@@ -181,6 +183,21 @@ function Header(props) {
     console.error(error);
 });
 
+//返回评分最多的三个
+axios.get('http://localhost:8080/evaluate/maxStar', {
+  params: {
+    cnt:'3',
+  }
+})
+.then(response => {
+  console.log('高分推荐',response.data)
+  setAver(response.data.data)
+})
+.catch(error => {
+  // 处理请求错误
+  console.error(error);
+});
+
 
   },[])
 
@@ -269,6 +286,11 @@ function Header(props) {
         <br/><br/><hr/>
         <br/>热搜推荐<br/><br/>
         {hot.map(item=>{
+          return <Tag>{item}</Tag>
+        })}
+        <br/><br/><hr/>
+        <br/>高分推荐<br/><br/>
+        {aver.map(item=>{
           return <Tag>{item}</Tag>
         })}
         <br/><br/><hr/>
