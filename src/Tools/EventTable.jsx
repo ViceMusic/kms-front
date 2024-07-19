@@ -4,6 +4,8 @@ import React, { createElement, useEffect, useState } from 'react';
 import { Input,Table } from 'antd';
 import axios from 'axios';
 import Column from 'antd/es/table/Column';
+import UserName from './UserName';
+import KnowName from './knowName';
 const { TextArea } = Input;
 
 
@@ -82,9 +84,17 @@ function EventTable(data) {
     
     <Modal title="我的申请" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} style={{width:200}}>
       <Table dataSource={approvals}>
-          <Column title="申请编号" dataIndex="appId" key="appId" />
-          <Column title="申请用户id" dataIndex="userId" key="userId" />
-          <Column title="申请知识id" dataIndex="knowId" key="knowId" />
+          <Column title="申请编号" dataIndex="appId" key="appId" 
+          
+          />
+          <Column title="申请用户" dataIndex="userId" key="userId" 
+                render={(text) => {
+                  return <UserName ID={text}></UserName>
+                 }}/>
+          <Column title="申请知识" dataIndex="knowId" key="knowId" 
+                render={(text) => {
+                  return <KnowName ID={text}></KnowName>
+                }}/>
           <Column title="当前状态" dataIndex="status" key="status" 
             render={(text) => {
                   if(text===0) return <p>还未审批</p>

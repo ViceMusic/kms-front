@@ -174,16 +174,10 @@ function Info(props) {
           <h3>{props.orgMessage.parentId}</h3><br/>
           <h3>{props.orgMessage.folderId}</h3><br/>
         */}
-        
-        <br/><br/>
           <table >
           <tr>
             <td>所属部门</td>
-            <td>35</td>
-          </tr>
-          <tr>
-            <td>Jane Smith</td>
-            <td>28</td>
+            <td><OrgName ID={props.orgMessage.parentId}></OrgName></td>
           </tr>
         </table> 
 
@@ -273,9 +267,14 @@ function Info(props) {
           fontSize:15,
           marginBottom:15
         }}>
-          用户:{item.userId} 
-          {item.userId==localStorage.getItem('userId') && <DeleteOutlined onClick={()=>deleteComment(item)}/>}<br></br>
-          <Rate disabled defaultValue={item.star} style={{fontSize:15}}></Rate><br></br>
+          
+          <UserName ID={item.userId} ></UserName>
+          
+          {item.userId==localStorage.getItem('userId') && <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+            {'(自己)'}
+            <DeleteOutlined style={{marginLeft:30}} onClick={()=>deleteComment(item)}/>
+          </div>}
+          <Rate disabled defaultValue={item.star} style={{fontSize:15}}></Rate>
           <div style={{margin:10}}>{item.text}</div>
         </div>
       )}
@@ -307,11 +306,11 @@ function Info(props) {
           <table >
           <tr>
             <td>所属部门</td>
-            <td>35</td>
+            <td><OrgName ID={props.folderMessage.orgId}></OrgName></td>
           </tr>
           <tr>
-            <td>Jane Smith</td>
-            <td>28</td>
+            <td>作者</td>
+            <td><UserName ID={props.folderMessage.authorId}></UserName></td>
           </tr>
         </table> 
       </>

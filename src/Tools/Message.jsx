@@ -5,6 +5,8 @@ import { Input} from 'antd';
 import { Space, Table, Tag } from 'antd';
 
 import axios from 'axios';
+import UserName from './UserName';
+import KnowName from './knowName';
 
 const { TextArea } = Input;
 const { Column, ColumnGroup } = Table;
@@ -67,8 +69,15 @@ function Message(data) {
     <Modal title="审批列表" open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} width={1040}>
       <Table dataSource={approvals}>
           <Column title="申请编号" dataIndex="appId" key="appId" />
-          <Column title="申请用户id" dataIndex="userId" key="userId" />
-          <Column title="申请知识id" dataIndex="knowId" key="knowId" />
+          <Column title="申请用户" dataIndex="userId" key="userId" 
+                render={(text) => {
+                  return <UserName ID={text}></UserName>
+            }}
+          />
+          <Column title="申请知识" dataIndex="knowId" key="knowId" 
+              render={(text) => {
+                return <KnowName ID={text}></KnowName>
+          }}/>
           <Column title="当前状态" dataIndex="status" key="status" 
             render={(text) => {
                   if(text===0) return <p>尚未审批</p>

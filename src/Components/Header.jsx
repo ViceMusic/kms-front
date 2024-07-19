@@ -3,7 +3,7 @@ import '../styles/font.css'
 import '../App.css'
 import Search from 'antd/es/input/Search';
 import { BellOutlined, FileDoneOutlined,UserOutlined } from '@ant-design/icons';
-import { Avatar, Drawer, Popover, Table } from 'antd';
+import { Avatar, Drawer, Popover, Table, Tag } from 'antd';
 import React, { useState,useContext, useEffect } from 'react';
 import { Button, Modal } from 'antd';
 import EventTable from '../Tools/EventTable';
@@ -12,11 +12,16 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthProvider';
 import axios from 'axios';
 import TagCon from '../Pages/TagCon';
+import KnowName from '../Tools/knowName';
 
 
 
 
 function Header(props) {
+  //gpt随机返回几个数据
+  const [gpt,setGpt]=useState(['没东西'])
+  const [hot,setHot]=useState(['没东西'])
+
 
   //关于收藏的展示
   const [open1, setOpen1] = useState(false);
@@ -83,21 +88,24 @@ function Header(props) {
       console.error(error);
     });
     //新增搜索历史
-    axios.get('http://localhost:8080/search/insert', {
-      params: {
-        userId:localStorage.getItem('userId'),
-        content:value,
-        tt:new Date().toISOString().slice(0, 19).replace('T', ' ')
-      }
-    })
-    .then(response => {
-      console.log(response.data)
-    })
-    .catch(error => {
-      // 处理请求错误
-      console.error(error);
+    if(value.length>=1){
+      axios.get('http://localhost:8080/search/insert', {
+        params: {
+          userId:localStorage.getItem('userId'),
+          content:value,
+          tt:new Date().toISOString().slice(0, 19).replace('T', ' ')
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.error(error);
+      });
+    }
       
-    });
+    
     //获取全部的搜索历史
     axios.get('http://localhost:8080/search/getByUserId', {
       params: {
@@ -140,7 +148,40 @@ function Header(props) {
     .catch(error => {
       // 处理请求错误
       console.error(error);
+      //gpt获取几个热搜
+      
     });
+    //gpt获取几个热搜
+    axios.get('http://localhost:8080/gpt/getHotSearch', {
+      params: {
+        cnt:'3',
+      }
+    })
+    .then(response => {
+      console.log(response.data.data)
+      setGpt(response.data.data)
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    
+  });
+
+  axios.get('http://localhost:8080/search/mostSearched', {
+    params: {
+      cnt:'3',
+    }
+  })
+  .then(response => {
+    console.log(response.data.data)
+    setHot(response.data.data.map(item=>item.content))
+  })
+  .catch(error => {
+    // 处理请求错误
+    console.error(error);
+});
+
+
   },[])
 
   return (
@@ -148,11 +189,6 @@ function Header(props) {
 
       {/*header左侧栏目*/}
       <div className='headerSon' style={{fontSize:30}}>
-        {/*公司的名字和logo*/}
-        {/*<div className='font-backcolor-white div-center' > 
-            <div style={{backgroundColor:'grey', height:30,width:30, margin:10}}></div>
-            <div className='font-backcolor-white' style={{fontSize:20, margin:20}}>公司名称</div>
-        </div>*/}
         {/*关于系统的名称的几个大字*/}
         <div className='thick-italic font-backcolor-white div-center'> 知识库管理系统</div>
         {/*关于提问框*/}
@@ -194,8 +230,8 @@ function Header(props) {
             {/*关于个人工作台*/}
             <Drawer title="个人收藏" onClose={onClose1} open={open1}>
                 {collections.map(item=>
-                  <>
-                  {item.knowId}
+                  <div style={{display:'flex',justifyContent:'space-between'}}>
+                  <KnowName ID={item.knowId}></KnowName>
                   <Button onClick={()=>{
                     axios.get('http://localhost:8080/collection/delete', {
                       params: {
@@ -212,7 +248,7 @@ function Header(props) {
                     });
 
                   }}>移除</Button>
-                  </>
+                  </div>
                 )}
             </Drawer>
             
@@ -226,8 +262,18 @@ function Header(props) {
       <TagCon backgroundColor='yellow'></TagCon>
       */}
       <Drawer title="搜索历史" onClose={onClose} open={open}>
+      <br/>你可能想搜?<br/><br/>
+        {gpt.map(item=>{
+          return <Tag>{item}</Tag>
+        })}
+        <br/><br/><hr/>
+        <br/>热搜推荐<br/><br/>
+        {hot.map(item=>{
+          return <Tag>{item}</Tag>
+        })}
+        <br/><br/><hr/>
         {searchRecords.map(item=>{
-          return <div style={{margin:10}}
+          return <div style={{margin:10,display:'flex',justifyContent:'space-between'}}
             onClick={()=>{
                 onClose()
                  setInSearch(true)
@@ -245,7 +291,7 @@ function Header(props) {
                   console.error(error);
                 });
             }}
-          >{item.content}
+          ><div>{item.content}</div>
           <Button onClick={()=>{ //删除搜索记录
             axios.get('http://localhost:8080/search/deleteBySearchId', {
               params: {
