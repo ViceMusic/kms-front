@@ -17,6 +17,16 @@ import TagCon from '../Pages/TagCon';
 
 
 function Header(props) {
+
+  //关于收藏的展示
+  const [open1, setOpen1] = useState(false);
+  const [collections,setCollections]=useState([])
+  const showDrawer1 = () => {
+    setOpen1(true);
+  };
+  const onClose1 = () => {
+    setOpen1(false);
+  };
   
   //搜索历史页面
   const [open, setOpen] = useState(false);
@@ -104,6 +114,7 @@ function Header(props) {
     });
   }
   useEffect(()=>{
+    //获取用户的历史信息记录
     axios.get('http://localhost:8080/search/getByUserId', {
       params: {
         userId:localStorage.getItem('userId'),
@@ -117,7 +128,20 @@ function Header(props) {
       // 处理请求错误
       console.error(error);
     });
-  })
+    //获取用户全部的收藏
+    axios.get('http://localhost:8080/collection/getByUserId', {
+      params: {
+        userId:localStorage.getItem('userId'),
+      }
+    })
+    .then(response => {
+      setCollections(response.data.data)
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+  },[])
 
   return (
     <div className='header'>
@@ -159,13 +183,38 @@ function Header(props) {
                 alignContent:'space-between'
               }}>
                 <Button style={{width:'100%', marginBottom:10}} onClick={()=>{navi('/')}}> 返回主页</Button><br/>
-                <Button style={{width:'100%', marginBottom:10}} onClick={()=>{navi('/')}}> 查看历史浏览记录</Button><br/>
+                <Button style={{width:'100%', marginBottom:10}} onClick={showDrawer1}> 工作台(个人收藏)</Button><br/>
                 <Button style={{width:'100%'}} onClick={()=>logout()}> logout</Button>
               </div>
               }
               >
              <div style={{margin:20}}>{localStorage.getItem('username')}</div>
             </Popover>
+
+            {/*关于个人工作台*/}
+            <Drawer title="个人收藏" onClose={onClose1} open={open1}>
+                {collections.map(item=>
+                  <>
+                  {item.knowId}
+                  <Button onClick={()=>{
+                    axios.get('http://localhost:8080/collection/delete', {
+                      params: {
+                        knowId:item.knowId,
+                        userId:localStorage.getItem('userId'),
+                      }
+                    })
+                    .then(response => {
+                      alert('移除成功, 刷新页面即可展示')
+                    })
+                    .catch(error => {
+                      // 处理请求错误
+                      console.error(error);
+                    });
+
+                  }}>移除</Button>
+                  </>
+                )}
+            </Drawer>
             
         </div>
       </div>

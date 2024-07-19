@@ -19,7 +19,7 @@ const { Dragger } = Upload;
 
 
 
-function Document(props) {
+function DocumentCollect(props) {
   //关于文件上传的部分
   //关于选中了什么文件知识(直接设置src)
   const [fileMsg, setFileMsg]=useState({})
@@ -402,7 +402,7 @@ function Document(props) {
     <div className='docu radium'>
       {/*上载和调整按钮*/}
       <div style={{display:'flex',justifyContent:'space-between' }}>
-        <h1 style={{marginBottom:20}}>文件列表</h1>
+        <h1 style={{marginBottom:20}}>文件列表(9)</h1>
         <div className='div-center' style={{fontSize:40}}>
           {props.org}
               {/*历史浏览记录*/}
@@ -914,5 +914,5 @@ function Document(props) {
   );
 }
 
-export default  Document;
+export default  DocumentCollect;
 

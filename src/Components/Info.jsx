@@ -5,6 +5,8 @@ import React, { createElement, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import axios from 'axios';
 import { useNavigate, useNavigation } from 'react-router-dom';
+import OrgName from '../Tools/OrgName';
+import UserName from '../Tools/UserName';
 const { TextArea } = Input;
 
  
@@ -211,24 +213,6 @@ function Info(props) {
     <>
     {/* 具体的信息以及评分 */}
     <h3>{props.fileMessage.name}</h3><br/>
-        {
-          /*
-          {tags.map((item,index)=>{
-              if(index%3==0){return <Tag color="orange">{item.name}</Tag>}
-              else if(index%2==0){return <Tag color="red">{item.name}</Tag>}
-              else if(index%1==0){return <Tag color="blue">{item.name}</Tag> }
-        })}
-        <Tag color="blue" onClick={showDrawer}>修改标签</Tag>
-        <Drawer title="文件的标签编辑" onClose={onClose} open={open}>
-          请在标签中选择文件标签
-          {allTags.map((item,index)=>{
-            <Checkbox onChange={(e)=>{
-              console.log('选中',e.target.checked)
-            }}>{item.name}</Checkbox>
-          })}
-        </Drawer>
-          */
-        }
     <br/><br/>
     <table >
       <tr>
@@ -237,11 +221,33 @@ function Info(props) {
       </tr>
       <tr>
         <td>所属部门</td>
-        <td>{props.fileMessage.orgId}</td>
+        <td><OrgName ID={props.fileMessage.orgId}></OrgName></td>
       </tr>
       <tr>
         <td>作者</td>
-        <td>{props.fileMessage.userId}</td>
+        <td><UserName ID={props.fileMessage.userId}></UserName></td>
+      </tr>
+      <tr>
+        <td><Button onClick={
+          ()=>{
+            axios.get('http://localhost:8080/collection/insert', {
+              params: {
+                knowId:props.fileMessage.knowId,
+                userId:localStorage.getItem('userId'),
+                name:'统一收藏'
+              }
+            })
+            .then(response => {
+              console.log(response.data)
+              alert('加入收藏成功')
+            })
+            .catch(error => {
+              // 处理请求错误
+              console.error(error);
+            });
+          }
+        }>加入收藏</Button></td>
+
       </tr>
     </table>  
     <br></br>

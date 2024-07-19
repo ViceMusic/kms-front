@@ -19,11 +19,13 @@ function FileView(data) {
       }
   return (
     //文件
-    <Modal title={'文件预览'+data.fileurl} open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} width={1400}>
+    <Modal title={'文件预览(问题出在本地预览上)'} open={data.isModalOpen.open} onOk={handleOk} onCancel={handleCancel} width={1400}>
        <FileViewer 
-        fileType='docx'//文件类型
-        filePath={require('C:/Users/98175/Desktop/work/kms-front/src/周易论文.docx')} //文件地址（后台给返的二进制流也可以）
+        fileType={data.fileMsg.type}//文件类型
+        
+        filePath={'C:/Users/98175/Desktop/work/kms-front/src/files/'+data.fileMsg.url} //文件地址（后台给返的二进制流也可以）
        /> 
+       文件为{data.fileMsg.url}, 由于本地部署存在限制
     </Modal>
   )
 ;
