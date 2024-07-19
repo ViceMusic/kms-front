@@ -117,6 +117,7 @@ const props = {
 };
 
 function DocumentSearch(props) {
+  const [fileMsg, setFileMsg]=useState({})
   const {inSearch, setInSearch, searchs,SetSearchs }=useContext(AuthContext)
   //关于选中了哪个文件(这里可能需要大改)
   const [fileurl, setfileurl]=useState('')
@@ -434,7 +435,7 @@ function DocumentSearch(props) {
                 onContextMenu={(event)=>{ //一个右键展示预览文件的方法, 后面可能回换成别的东西
                   //首先阻止浏览器自己的页面
                   event.preventDefault(); // 阻止浏览器默认的右键菜单
-                  setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
+                  setFileMsg(item)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
                   show1()
                   //将文件的修整和信息放在信息栏和别的啥
                 }}
@@ -576,7 +577,7 @@ function DocumentSearch(props) {
           }}
           onContextMenu={(event)=>{
             event.preventDefault(); // 阻止浏览器默认的右键菜单
-            setfileurl(item.name)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
+            setFileMsg(item)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
             show1()
           }}
             style={{margin:10, backgroundColor:'white',padding:10, borderRadius:10}}> 
@@ -703,7 +704,7 @@ function DocumentSearch(props) {
             ))}
         </Grid>
         {/*文件浏览组件(暂时先不用管, 逐个渲染太吃性能)*/}
-        <FileView fileurl={fileurl} isModalOpen={{open:isModalOpen1, setOpen:()=>setIsModalOpen1()}} />
+        <FileView fileMsg={fileMsg} isModalOpen={{open:isModalOpen1, setOpen:()=>setIsModalOpen1()}} />
         {/*修改文件夹名字的弹窗*/}
         <Modal title="修改文件夹名字" open={isModalOpenChangeFolder} onOk={handleOkChangeFolder} onCancel={handleCancelChangeFolder}>
             <Input onChange={(e)=>{
