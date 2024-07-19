@@ -8,6 +8,7 @@ const fs =require('fs')
 const app = express();
 const upload = multer({ dest: path.join(__dirname, '../files') });
 
+
 // 使用 cors 中间件
 app.use(cors());
 
@@ -37,9 +38,24 @@ app.get('/download/:fileName', (req, res) => {
     // 读取文件并将其传递到前端
     const fileData = fs.readFileSync(filePath);
     res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
     res.send(fileData);
   });
+  app.get('/deleteFile', (req, res) => {
+    const fileName = req.query.fileName;
+    const filePath = path.join(__dirname, fileName);
+  
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+        res.status(500).json({ error: 'Failed to delete file' });
+      } else {
+        console.log(`File "${fileName}" has been deleted.`);
+        res.json({ message: 'File deleted successfully' });
+      }
+    });
+  });
+
 
 app.listen(3010, () => {
   console.log('Server is running on port 3010');

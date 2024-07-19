@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import './ComCss.css'
 import { Breadcrumb ,Cascader,DatePicker, Drawer, Input} from 'antd';
 import Search from 'antd/es/input/Search';
-import { CloudUploadOutlined,FolderOutlined,FileOutlined,FileJpgOutlined ,SnippetsOutlined,EditOutlined,DeleteOutlined,RollbackOutlined, DiffFilled, DiffOutlined, FolderAddOutlined, ArrowDownOutlined, InfoCircleOutlined, FieldTimeOutlined   } from '@ant-design/icons';
+import { CloudUploadOutlined,FolderOutlined,FileOutlined,FileJpgOutlined ,SnippetsOutlined,EditOutlined,DeleteOutlined,RollbackOutlined, DiffFilled, DiffOutlined, FolderAddOutlined, ArrowDownOutlined, InfoCircleOutlined, FieldTimeOutlined,  FilePdfOutlined, FileImageOutlined   } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
 import { Button, Modal, Divider, Flex, Tree,Tag,Popover } from 'antd';
 import { useEffect, useState,useContext } from 'react';
@@ -16,105 +16,6 @@ const { Dragger } = Upload;
 
 
 
-const options = [
-  { 
-  value: 'zhejiang',
-  label: 'Zhejiang',
-    },]
-
-
-// 上传文件的时候的输入框的数据
-const treeData = [
-  {
-    title: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-          {
-            title: '0-0-0-0',
-            key: '0-0-0-0',
-          },
-          {
-            title: '0-0-0-1',
-            key: '0-0-0-1',
-          },
-          {
-            title: '0-0-0-2',
-            key: '0-0-0-2',
-          },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-          {
-            title: '0-0-1-0',
-            key: '0-0-1-0',
-          },
-          {
-            title: '0-0-1-1',
-            key: '0-0-1-1',
-          },
-          {
-            title: '0-0-1-2',
-            key: '0-0-1-2',
-          },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    children: [
-      {
-        title: '0-1-0-0',
-        key: '0-1-0-0',
-      },
-      {
-        title: '0-1-0-1',
-        key: '0-1-0-1',
-      },
-      {
-        title: '0-1-0-2',
-        key: '0-1-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-2',
-    key: '0-2',
-  },
-];
-
-// 关于文件上传的部分
-const props = {
-  name: 'file',
-  multiple: true,
-  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
 
 function DocumentSearch(props) {
   const [fileMsg, setFileMsg]=useState({})
@@ -126,46 +27,9 @@ function DocumentSearch(props) {
   const show1=()=>{
       setIsModalOpen1(true)
   }
-  //关于新增文件的弹窗
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-    addFile()
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  //关于选择框
-  const onChange = (value) => {
-    console.log(value);
-  };
+  
   //浏览开关(切换列表和别的什么)
   const [switchOpen, setSwitchOpen]=useState(true)
-
-  const onChangeSwitch = (value) => {
-    setSwitchOpen(!switchOpen)
-  };
-  //关于数形控件
-  const [expandedKeys, setExpandedKeys] = useState(['0-0-0', '0-0-1']);
-  const [checkedKeys, setCheckedKeys] = useState(['0-0-0']);
-  const [selectedKeys, setSelectedKeys] = useState([]);
-  const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const onExpand = (expandedKeysValue) => {
-    console.log('onExpand', expandedKeysValue);
-    setExpandedKeys(expandedKeysValue);
-    setAutoExpandParent(false);
-  };
-  const onCheck = (checkedKeysValue) => {
-    console.log('onCheck', checkedKeysValue);
-    setCheckedKeys(checkedKeysValue);
-  };
-  const onSelect = (selectedKeysValue, info) => {
-    console.log('onSelect', info);
-    setSelectedKeys(selectedKeysValue);
-  };
 
   //关于新增文件夹的内容
   const [isModalOpenAddFolder, setIsModalOpenAddFolder] = useState(false);
@@ -244,6 +108,8 @@ function DocumentSearch(props) {
       // 处理请求错误
       console.error(error);
     });
+    
+    
   }
 
   //修改文件/知识的方法
@@ -321,6 +187,18 @@ function DocumentSearch(props) {
     })
     .then(response => {
       alert('知识新增完成, 刷新页面以获得最新的知识消息')
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+    //删除文件
+    axios.get('http://localhost:3010/deleteFile', {
+      params: {
+        fileName:item.url
+      }
+    })
+    .then(response => {
     })
     .catch(error => {
       // 处理请求错误
@@ -431,12 +309,20 @@ function DocumentSearch(props) {
                     props.setFileMessage(item)
                     getCommentsByKnowId(item)
                     setBrowerRecord(item)//新增浏览记录
+                    //展示平均分数, 但是服务器爆出500错误
+                    axios.get('http://localhost:8080/evaluate/getAvg', {
+                      params: {
+                        knowId:item.knowId,
+                      }
+                    })
+                    .then(response => {
+                      console.log('平均分',response.data.data)
+                      props.setAverageStar(response.data.data)
+                    })
                 }}
                 onContextMenu={(event)=>{ //一个右键展示预览文件的方法, 后面可能回换成别的东西
                   //首先阻止浏览器自己的页面
                   event.preventDefault(); // 阻止浏览器默认的右键菜单
-                  setFileMsg(item)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
-                  show1()
                   //将文件的修整和信息放在信息栏和别的啥
                 }}
               >
@@ -452,7 +338,26 @@ function DocumentSearch(props) {
                             .then(response => {
                               const num=response.data.data
                                 if(num==1){
-                                  alert('您可以访问这个知识文件')
+                                  axios.get(`http://localhost:3010/download/`+item.url, { responseType: 'blob' })
+                                        .then(response => {
+                                          // 创建一个用于下载的 URL
+                                          const downloadUrl = URL.createObjectURL(response.data);
+
+                                          // 创建一个临时的 <a> 标签并模拟点击下载
+                                          const tempLink = document.createElement('a');
+                                          tempLink.href = downloadUrl;
+                                          tempLink.setAttribute('download', item.url);
+                                          tempLink.style.display = 'none';
+                                          document.body.appendChild(tempLink);
+                                          tempLink.click();
+
+                                          // 清理临时资源
+                                          document.body.removeChild(tempLink);
+                                          URL.revokeObjectURL(downloadUrl);
+                                        })
+                                        .catch(error => {
+                                          console.error('Error downloading file:', error);
+                                        });
                                 }else{
                                     alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
                                     //提交审批内容
@@ -480,7 +385,8 @@ function DocumentSearch(props) {
                               .then(response => {
                                 const num=response.data.data
                                 if(num==1){
-                                  alert('您可以访问这个知识文件')
+                                  setFileMsg(item)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
+                                  show1()
                                 }else{
                                   alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
                                     //提交审批内容
@@ -560,7 +466,10 @@ function DocumentSearch(props) {
                 } >
                   <div style={{ height:100, width:100}}>
                     {/*点击页面实现功能*/}
-                     <SnippetsOutlined  style={{fontSize:100}}/> 
+                    {item.type=='pdf' && <FilePdfOutlined   style={{fontSize:100}}/> }
+                    {(item.type=='png'||item.type=='jpg') && <FileImageOutlined    style={{fontSize:100}}/> }
+                    {(item.type!='pdf'&&item.type!='png'&&item.type!='jpg') && <SnippetsOutlined  style={{fontSize:100}}/> }
+                     
                     </div>
                   <div style={{ textAlign:'center'}}>{item.name}</div>
 
@@ -577,11 +486,11 @@ function DocumentSearch(props) {
           }}
           onContextMenu={(event)=>{
             event.preventDefault(); // 阻止浏览器默认的右键菜单
-            setFileMsg(item)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
-            show1()
           }}
             style={{margin:10, backgroundColor:'white',padding:10, borderRadius:10}}> 
-                  <SnippetsOutlined  style={{marginRight:10}}/> 
+                    {item.type=='pdf' && <FilePdfOutlined   style={{marginRight:10}}/> }
+                    {(item.type=='png'||item.type=='jpg') && <FileImageOutlined    style={{marginRight:10}}/> }
+                    {(item.type!='pdf'&&item.type!='png'&&item.type!='jpg') && <SnippetsOutlined  style={{marginRight:10}}/> }
                   <Popover content={
                         <div>
                           <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
@@ -594,7 +503,26 @@ function DocumentSearch(props) {
                             .then(response => {
                               const num=response.data.data
                               if(num==1){
-                                alert('您可以访问这个知识文件')
+                                axios.get(`http://localhost:3010/download/`+item.url, { responseType: 'blob' })
+                                        .then(response => {
+                                          // 创建一个用于下载的 URL
+                                          const downloadUrl = URL.createObjectURL(response.data);
+
+                                          // 创建一个临时的 <a> 标签并模拟点击下载
+                                          const tempLink = document.createElement('a');
+                                          tempLink.href = downloadUrl;
+                                          tempLink.setAttribute('download', item.url);
+                                          tempLink.style.display = 'none';
+                                          document.body.appendChild(tempLink);
+                                          tempLink.click();
+
+                                          // 清理临时资源
+                                          document.body.removeChild(tempLink);
+                                          URL.revokeObjectURL(downloadUrl);
+                                        })
+                                        .catch(error => {
+                                          console.error('Error downloading file:', error);
+                                        });
                               }else{
                                 alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
                                 //提交审批内容
@@ -622,7 +550,8 @@ function DocumentSearch(props) {
                               .then(response => {
                                 const num=response.data.data
                                 if(num==1){
-                                  alert('您可以访问这个知识文件')
+                                  setFileMsg(item)//这个是可以把数据传递到文件预览组件的, 比较吃性能所以采用这种格式
+                                  show1()
                                 }else{
                                   alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
                                   //提交审批内容

@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import './ComCss.css'
 import { Breadcrumb ,Cascader,DatePicker, Drawer, Input} from 'antd';
 import Search from 'antd/es/input/Search';
-import { CloudUploadOutlined,FolderOutlined,FileOutlined,FileJpgOutlined ,SnippetsOutlined,EditOutlined,DeleteOutlined,RollbackOutlined, DiffFilled, DiffOutlined, FolderAddOutlined, ArrowDownOutlined, InfoCircleOutlined, FieldTimeOutlined   } from '@ant-design/icons';
+import { CloudUploadOutlined,FolderOutlined,FileOutlined,FileJpgOutlined ,SnippetsOutlined,EditOutlined,DeleteOutlined,RollbackOutlined, DiffFilled, DiffOutlined, FolderAddOutlined, ArrowDownOutlined, InfoCircleOutlined, FieldTimeOutlined,FilePdfOutlined,FileImageOutlined  } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
 import { Button, Modal, Divider, Flex, Tree,Tag,Popover } from 'antd';
 import { useEffect, useState } from 'react';
@@ -307,12 +307,25 @@ function Document(props) {
       }
     })
     .then(response => {
-      alert('知识新增完成, 刷新页面以获得最新的知识消息')
+      alert('删除完成, 刷新页面以获得最新的知识消息')
     })
     .catch(error => {
       // 处理请求错误
       console.error(error);
     });
+    //删除文件
+    axios.get('http://localhost:3010/deleteFile', {
+      params: {
+        fileName:item.url
+      }
+    })
+    .then(response => {
+    })
+    .catch(error => {
+      // 处理请求错误
+      console.error(error);
+    });
+    //删除文件
   }
 
   //根据文件序号获取该文件评论的方法
@@ -688,7 +701,9 @@ function Document(props) {
                 } >
                   <div style={{ height:100, width:100}}>
                     {/*点击页面实现功能*/}
-                     <SnippetsOutlined  style={{fontSize:100}}/> 
+                    {item.type=='pdf' && <FilePdfOutlined   style={{fontSize:100}}/> }
+                    {(item.type=='png'||item.type=='jpg') && <FileImageOutlined    style={{fontSize:100}}/> }
+                    {(item.type!='pdf'&&item.type!='png'&&item.type!='jpg') && <SnippetsOutlined  style={{fontSize:100}}/> }
                     </div>
                   <div style={{ textAlign:'center'}}>{item.name.length > 4 ? `${item.name.slice(0, 4)}...` : item.name}</div>
 
@@ -708,7 +723,9 @@ function Document(props) {
 
           }}
             style={{margin:10, backgroundColor:'white',padding:10, borderRadius:10}}> 
-                  <SnippetsOutlined  style={{marginRight:10}}/> 
+                  {item.type=='pdf' && <FilePdfOutlined   style={{marginRight:10}}/> }
+                    {(item.type=='png'||item.type=='jpg') && <FileImageOutlined    style={{marginRight:10}}/> }
+                    {(item.type!='pdf'&&item.type!='png'&&item.type!='jpg') && <SnippetsOutlined  style={{marginRight:10}}/> }
                   <Popover content={
                         <div>
                           <Button style={{marginBottom:10,border:'none' }} onClick={(e)=>{
@@ -827,6 +844,7 @@ function Document(props) {
                               const num=response.data.data
                               if(num==1){
                                 deleteFile(e,item)
+                                //除了要删除数据库还要删除文件内容
                               }else{
                                 alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
                                 //提交审批内容
