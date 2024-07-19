@@ -291,7 +291,7 @@ axios.get('http://localhost:8080/evaluate/maxStar', {
         <br/><br/><hr/>
         <br/>高分推荐<br/><br/>
         {aver.map(item=>{
-          return <Tag>{item}</Tag>
+          return <Tag>{item.item}</Tag>
         })}
         <br/><br/><hr/>
         {searchRecords.map(item=>{
