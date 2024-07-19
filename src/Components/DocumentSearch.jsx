@@ -435,32 +435,13 @@ function DocumentSearch(props) {
 
                             }}><EditOutlined /> 修改知识</Button><br/>
                           <Button style={{marginBottom:10,border:'none' }}onClick={(e)=>{
-                            axios.get('http://localhost:8080/user/check', {
-                              params: {
-                                knowId:item.knowId,
-                                userId:localStorage.getItem('userId')
-                              }
-                            })
-                            .then(response => {
-                              const num=response.data.data
-                              if(num==1){
-                                deleteFile(e,item)
-                              }else{
-                                alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
-                                //提交审批内容
-                                axios.get('http://localhost:8080/approval/insert', {
-                                  params: {
-                                    knowId:item.knowId,
-                                    userId:localStorage.getItem('userId')
-                                  }
-                                })
-                                .then(response => {
-                                  console.log('审批添加成功')
-                                  
-                                })
-                              }
-                            })
-
+                            //改成只有作者可以删除文件
+                            if(item.userId==localStorage.getItem('userId')){
+                              deleteFile(e,item)
+                              //除了要删除数据库还要删除文件内容
+                            }else{
+                              alert('只有作者才能删除文件')
+                            }
                             }}><DeleteOutlined />删除知识</Button>
                   </div>
                 } >
@@ -599,32 +580,13 @@ function DocumentSearch(props) {
 
                             }}><EditOutlined /> 修改知识</Button><br/>
                           <Button style={{marginBottom:10,border:'none' }}onClick={(e)=>{
-                            axios.get('http://localhost:8080/user/check', {
-                              params: {
-                                knowId:item.knowId,
-                                userId:localStorage.getItem('userId')
-                              }
-                            })
-                            .then(response => {
-                              const num=response.data.data
-                              if(num==1){
-                                deleteFile(e,item)
-                              }else{
-                                alert('这个知识文件暂时不对您开放, 已经为您向原作者提出申请, 等待审批中')
-                                //提交审批内容
-                                axios.get('http://localhost:8080/approval/insert', {
-                                  params: {
-                                    knowId:item.knowId,
-                                    userId:localStorage.getItem('userId')
-                                  }
-                                })
-                                .then(response => {
-                                  console.log('审批添加成功')
-                                  
-                                })
-                              }
-                            })
-
+                            //改成只有作者可以删除文件
+                            if(item.userId==localStorage.getItem('userId')){
+                              deleteFile(e,item)
+                              //除了要删除数据库还要删除文件内容
+                            }else{
+                              alert('只有作者才能删除文件')
+                            }
                             }}><DeleteOutlined />删除知识</Button>
                         </div>
                       } >  {item.name}
